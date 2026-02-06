@@ -20,6 +20,7 @@ spring:
           filters:
             - StripPrefix=0
             - RequestRateLimiter=redisRateLimiter
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
             - name: Retry
               args:
                 retries: 3
@@ -34,6 +35,7 @@ spring:
             - Path=/api/v1/media/**
           filters:
             - StripPrefix=0
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
             - name: Retry
               args:
                 retries: 3
@@ -49,6 +51,7 @@ spring:
             - Path=/v3/api-docs/iam-service
           filters:
             - SetPath=/v3/api-docs
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
 
         - id: media-service-openapi
           uri: http://fitnest-media-service-dev:8086
@@ -56,11 +59,14 @@ spring:
             - Path=/v3/api-docs/media-service
           filters:
             - SetPath=/v3/api-docs
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
 
         - id: media-service-swagger-assets
           uri: http://fitnest-media-service-dev:8086
           predicates:
             - Path=/swagger/**
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
 
 # Removed Eureka configuration as it conflicts with Kubernetes/Istio DNS
 
