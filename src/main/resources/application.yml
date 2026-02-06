@@ -84,8 +84,76 @@ spring:
           filters:
             - StripPrefix=0
 
-        # Create one openapi route for each service isn't strictly necessary if springdoc manages it, 
-        # but good for explicit proxying if needed.
+        # OpenAPI doc proxy routes
+        - id: iam-service-openapi
+          uri: http://iam-service:8080
+          predicates:
+            - Path=/v3/api-docs/iam-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: media-service-openapi
+          uri: http://media-service:8086
+          predicates:
+            - Path=/v3/api-docs/media-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: catalog-service-openapi
+          uri: http://catalog-service:8080
+          predicates:
+            - Path=/v3/api-docs/catalog-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: commerce-service-openapi
+          uri: http://commerce-service:8080
+          predicates:
+            - Path=/v3/api-docs/commerce-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: fitmarket-service-openapi
+          uri: http://fitmarket-service:8080
+          predicates:
+            - Path=/v3/api-docs/fitmarket-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: notifications-service-openapi
+          uri: http://notifications-service:8080
+          predicates:
+            - Path=/v3/api-docs/notifications-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: payment-service-openapi
+          uri: http://payment-service:8080
+          predicates:
+            - Path=/v3/api-docs/payment-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: subscription-service-openapi
+          uri: http://subscription-service:8080
+          predicates:
+            - Path=/v3/api-docs/subscription-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: support-service-openapi
+          uri: http://support-service:8080
+          predicates:
+            - Path=/v3/api-docs/support-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: user-service-openapi
+          uri: http://user-service:8080
+          predicates:
+            - Path=/v3/api-docs/user-service
+          filters:
+            - SetPath=/v3/api-docs
 
 
 # Removed Eureka configuration as it conflicts with Kubernetes/Istio DNS
