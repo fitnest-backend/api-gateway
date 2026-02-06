@@ -9,21 +9,27 @@ public class ErrorResponseBuilder {
     private ErrorResponseBuilder() {
     }
 
-    public static ResponseEntity<ApiError> buildError(HttpStatus status, String code, String message) {
+    public static ResponseEntity<ApiError> buildError(HttpStatus status, String code, String message, String path) {
         ApiError error = ApiError.builder()
-                .code(code)
-                .message(message)
-                .status(status.value())
+                .error(ApiError.ErrorDetail.builder()
+                        .code(code)
+                        .message(message)
+                        .status(status.value())
+                        .path(path)
+                        .build())
                 .build();
 
         return ResponseEntity.status(status).body(error);
     }
 
-    public static ResponseEntity<ApiError> buildErrorWithRetryAfter(HttpStatus status, String code, String message, String retryAfter) {
+    public static ResponseEntity<ApiError> buildErrorWithRetryAfter(HttpStatus status, String code, String message, String retryAfter, String path) {
         ApiError error = ApiError.builder()
-                .code(code)
-                .message(message)
-                .status(status.value())
+                .error(ApiError.ErrorDetail.builder()
+                        .code(code)
+                        .message(message)
+                        .status(status.value())
+                        .path(path)
+                        .build())
                 .build();
 
         return ResponseEntity.status(status)
@@ -31,19 +37,19 @@ public class ErrorResponseBuilder {
                 .body(error);
     }
 
-    public static ResponseEntity<ApiError> internalServerError(String message) {
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", message);
+    public static ResponseEntity<ApiError> internalServerError(String message, String path) {
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_SERVER_ERROR", message, path);
     }
 
-    public static ResponseEntity<ApiError> badRequest(String message) {
-        return buildError(HttpStatus.BAD_REQUEST, "BAD_REQUEST", message);
+    public static ResponseEntity<ApiError> badRequest(String message, String path) {
+        return buildError(HttpStatus.BAD_REQUEST, "BAD_REQUEST", message, path);
     }
 
-    public static ResponseEntity<ApiError> serviceUnavailable(String message) {
-        return buildErrorWithRetryAfter(HttpStatus.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", message, "60");
+    public static ResponseEntity<ApiError> serviceUnavailable(String message, String path) {
+        return buildErrorWithRetryAfter(HttpStatus.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", message, "60", path);
     }
 
-    public static ResponseEntity<ApiError> gatewayTimeout(String message) {
-        return buildError(HttpStatus.GATEWAY_TIMEOUT, "GATEWAY_TIMEOUT", message);
+    public static ResponseEntity<ApiError> gatewayTimeout(String message, String path) {
+        return buildError(HttpStatus.GATEWAY_TIMEOUT, "GATEWAY_TIMEOUT", message, path);
     }
 }

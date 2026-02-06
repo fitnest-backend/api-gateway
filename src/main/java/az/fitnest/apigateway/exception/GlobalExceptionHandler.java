@@ -16,59 +16,62 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
 
+import org.springframework.web.server.ServerWebExchange;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGenericException(Exception ex) {
+    public ResponseEntity<ApiError> handleGenericException(Exception ex, ServerWebExchange exchange) {
         logger.error("Unexpected error in API Gateway: ", ex);
-        return ErrorResponseBuilder.internalServerError("An unexpected error occurred in the API Gateway");
+        return ErrorResponseBuilder.internalServerError("An unexpected error occurred in the API Gateway", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ServerWebInputException.class)
-    public ResponseEntity<ApiError> handleServerWebInputException(ServerWebInputException ex) {
-        return ErrorResponseBuilder.badRequest("Invalid request format");
+    public ResponseEntity<ApiError> handleServerWebInputException(ServerWebInputException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.badRequest("Invalid request format", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return ErrorResponseBuilder.badRequest(ex.getMessage());
+    public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.badRequest(ex.getMessage(), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ConnectException.class)
-    public ResponseEntity<ApiError> handleConnectException(ConnectException ex) {
-        return ErrorResponseBuilder.serviceUnavailable("The requested service is currently unavailable. Please try again later.");
+    public ResponseEntity<ApiError> handleConnectException(ConnectException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.serviceUnavailable("The requested service is currently unavailable. Please try again later.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(UnknownHostException.class)
-    public ResponseEntity<ApiError> handleUnknownHostException(UnknownHostException ex) {
-        return ErrorResponseBuilder.serviceUnavailable("Failed to resolve the requested service. It may be down or unaccessible.");
+    public ResponseEntity<ApiError> handleUnknownHostException(UnknownHostException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.serviceUnavailable("Failed to resolve the requested service. It may be down or unaccessible.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(TimeoutException.class)
-    public ResponseEntity<ApiError> handleTimeoutException(TimeoutException ex) {
-        return ErrorResponseBuilder.gatewayTimeout("The request timed out while waiting for the service to respond.");
+    public ResponseEntity<ApiError> handleTimeoutException(TimeoutException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.gatewayTimeout("The request timed out while waiting for the service to respond.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientRequestException.class)
-    public ResponseEntity<ApiError> handleWebClientRequestException(WebClientRequestException ex) {
-        return ErrorResponseBuilder.serviceUnavailable("Unable to connect to the requested service. Please try again later.");
+    public ResponseEntity<ApiError> handleWebClientRequestException(WebClientRequestException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.serviceUnavailable("Unable to connect to the requested service. Please try again later.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientResponseException.class)
-    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException ex) {
+    public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException ex, ServerWebExchange exchange) {
+        String path = exchange.getRequest().getPath().value();
         if (ex.getStatusCode().is5xxServerError()) {
-            return ErrorResponseBuilder.serviceUnavailable("The service is experiencing issues. Please try again later.");
+            return ErrorResponseBuilder.serviceUnavailable("The service is experiencing issues. Please try again later.", path);
         } else if (ex.getStatusCode().is4xxClientError()) {
-            return ErrorResponseBuilder.badRequest(ex.getStatusText() + ": " + ex.getMessage());
+            return ErrorResponseBuilder.badRequest(ex.getStatusText() + ": " + ex.getMessage(), path);
         }
-        return ErrorResponseBuilder.internalServerError("Service communication error");
+        return ErrorResponseBuilder.internalServerError("Service communication error", path);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex) {
-        return ErrorResponseBuilder.badRequest("The requested service or resource was not found.");
+    public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex, ServerWebExchange exchange) {
+        return ErrorResponseBuilder.badRequest("The requested service or resource was not found.", exchange.getRequest().getPath().value());
     }
 }
