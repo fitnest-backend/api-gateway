@@ -20,7 +20,7 @@ public class PathValidator {
     }
 
     public static boolean requiresAuth(String path) {
-        return path.startsWith("/api/v1/me/") ||
+        return path.startsWith("/api/v1/me") ||
                path.startsWith("/api/v1/internal/") ||
                path.startsWith("/api/v1/media/upload") ||
                path.startsWith("/api/v1/media/delete") ||
