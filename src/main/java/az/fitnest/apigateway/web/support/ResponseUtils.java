@@ -30,11 +30,12 @@ public class ResponseUtils {
         response.getHeaders().add("Retry-After", "60");
 
         ApiError error = ApiError.builder()
-                .code("TOO_MANY_REQUESTS")
-                .message("Rate limit exceeded. Please wait 1 minute before making another request.")
-                .status(HttpStatus.TOO_MANY_REQUESTS.value())
-                .path("/api/rate-limited")
-                .timestamp(System.currentTimeMillis())
+                .error(ApiError.ErrorDetail.builder()
+                        .code("TOO_MANY_REQUESTS")
+                        .message("Rate limit exceeded. Please wait 1 minute before making another request.")
+                        .status(HttpStatus.TOO_MANY_REQUESTS.value())
+                        .path("/api/rate-limited")
+                        .build())
                 .build();
 
         try {
