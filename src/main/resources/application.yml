@@ -77,23 +77,7 @@ spring:
           filters:
             - StripPrefix=0
 
-        # IAM Service Setup/Me Routes (Must be before user-service catch-all)
-        - id: iam-service-setup-flow
-          uri: http://iam-service:8080
-          predicates:
-            - Path=/api/v1/me/setup/complete,/api/v1/me/profile,/api/v1/me/goal,/api/v1/me/fitness-level,/api/v1/me/reference/goals
-          filters:
-            - StripPrefix=0
-            - RequestRateLimiter=redisRateLimiter
 
-        - id: iam-service-setup-status
-          uri: http://iam-service:8080
-          predicates:
-            - Path=/api/v1/me/setup
-            - Method=GET
-          filters:
-            - StripPrefix=0
-            - RequestRateLimiter=redisRateLimiter
 
         - id: user-service
           uri: http://user-service:8080
