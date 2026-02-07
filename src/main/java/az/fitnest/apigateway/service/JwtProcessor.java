@@ -60,11 +60,26 @@ public class JwtProcessor {
                 return Mono.just(new TokenValidationResult(false, null, null, null, null));
             }
 
-            String email = claims.getSubject();
-            Long userId = claims.get("userId", Long.class);
-            String jti = claims.get("jti", String.class);
+            // IAM service puts userId in 'sub' claim (as string), not email
+            String subjectStr = claims.getSubject();
+            Long parsedUserId = null;
+            if (subjectStr != null && !subjectStr.isEmpty()) {
+                try {
+                    parsedUserId = Long.parseLong(subjectStr);
+                } catch (NumberFormatException e) {
+                    // If sub is not a number, it might be an email (legacy format)
+                    // In that case, try to get userId from separate claim
+                    parsedUserId = claims.get("userId", Long.class);
+                }
+            }
+            // Final variable for use in lambda
+            final Long userId = parsedUserId;
+            
+            // Email may or may not be present in the token
+            final String email = claims.get("email", String.class);
+            final String jti = claims.get("jti", String.class);
             @SuppressWarnings("unchecked")
-            List<String> roles = claims.get("roles", List.class);
+            final List<String> roles = claims.get("roles", List.class);
 
             if (checkBlacklist && jti != null) {
                 String blacklistKey = "blacklist:jti:" + jti;
