@@ -24,15 +24,13 @@ COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-# Correct ENTRYPOINT syntax (JSON array, multi-line)
-ENTRYPOINT [
-  "java",
-  "-XX:+UseContainerSupport",
-  "-XX:MaxRAMPercentage=75.0",
-  "-XX:InitialRAMPercentage=50.0",
-  "-XX:+UseG1GC",
-  "-XX:+AlwaysPreTouch",
-  "-XX:+ExitOnOutOfMemoryError",
-  "-jar",
-  "app.jar"
-]
+# ENTRYPOINT must start at column 0, JSON array items too
+ENTRYPOINT ["java",
+"-XX:+UseContainerSupport",
+"-XX:MaxRAMPercentage=75.0",
+"-XX:InitialRAMPercentage=50.0",
+"-XX:+UseG1GC",
+"-XX:+AlwaysPreTouch",
+"-XX:+ExitOnOutOfMemoryError",
+"-jar",
+"app.jar"]
