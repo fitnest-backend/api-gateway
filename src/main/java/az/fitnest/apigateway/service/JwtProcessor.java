@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 public class JwtProcessor {
 
-    @Value("${JWT_SECRET:my-hardcoded-secret-key-for-testing-purposes}")
+    @Value("${JWT_SECRET:your-jwt-secret-change-in-production}")
     private String secretKey;
 
     private final ReactiveRedisTemplate<String, String> redisTemplate;
