@@ -7,8 +7,7 @@ WORKDIR /app
 
 # Copy Gradle project files
 COPY build.gradle settings.gradle ./
-COPY gradle ./gradle
-COPY gradlew ./
+
 
 # Regenerate the wrapper jar (gitignored) so ./gradlew can run
 RUN gradle wrapper
