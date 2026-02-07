@@ -14,6 +14,13 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("API Gateway")
                         .version("1.0.0")
-                        .description("API Gateway for Fitnest System"));
+                        .description("API Gateway for Fitnest System"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("bearerAuth", new io.swagger.v3.oas.models.security.SecurityScheme()
+                                .type(io.swagger.v3.oas.models.security.SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .description("Enter your JWT token")))
+                .addSecurityItem(new io.swagger.v3.oas.models.security.SecurityRequirement().addList("bearerAuth"));
     }
 }
