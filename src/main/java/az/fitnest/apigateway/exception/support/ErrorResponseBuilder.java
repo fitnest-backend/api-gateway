@@ -52,4 +52,8 @@ public class ErrorResponseBuilder {
     public static ResponseEntity<ApiError> gatewayTimeout(String message, String path) {
         return buildError(HttpStatus.GATEWAY_TIMEOUT, "GATEWAY_TIMEOUT", message, path);
     }
+
+    public static ResponseEntity<ApiError> notFound(String message, String path) {
+        return buildError(HttpStatus.NOT_FOUND, "NOT_FOUND", message, path);
+    }
 }
