@@ -16,7 +16,7 @@ spring:
         - id: iam-service
           uri: http://iam-service:8080
           predicates:
-            - Path=/api/v1/auth/**,/api/v1/admin/**,/api/v1/users/**,/api/v1/profiles/**
+            - Path=/api/v1/auth/**,/api/v1/admin/**
           filters:
             - StripPrefix=0
             - RequestRateLimiter=redisRateLimiter

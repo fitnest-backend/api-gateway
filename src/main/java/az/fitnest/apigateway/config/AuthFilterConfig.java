@@ -33,11 +33,6 @@ public class AuthFilterConfig {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getPath().value();
 
-            // Block internal service-to-service endpoints - these should never be exposed via gateway
-            if (path.startsWith("/api/v1/internal/")) {
-                return ResponseUtils.respondWithForbidden(exchange.getResponse());
-            }
-
             // Bypass auth and rate limiting for OpenAPI docs and Swagger UI
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
                 return chain.filter(exchange);
