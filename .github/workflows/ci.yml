@@ -98,7 +98,12 @@ jobs:
           cd helm-repo
           git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }}
 
-          yq eval -i '.image.tag = strenv(IMAGE_TAG)' $HELM_VALUES_FILE
+          # Construct the full tag matching the docker-build step: branch-sha
+          FULL_TAG="${{ github.ref_name }}-${IMAGE_TAG}"
+          echo "Updating image tag to: $FULL_TAG"
+          
+          # Update the values.yaml with the full tag
+          yq eval -i ".image.tag = \"$FULL_TAG\"" $HELM_VALUES_FILE
 
           if git diff --quiet; then
             echo "No changes to commit"
