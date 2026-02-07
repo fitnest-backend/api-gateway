@@ -24,6 +24,7 @@ COPY --from=builder /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
+# Correct ENTRYPOINT syntax (JSON array, multi-line)
 ENTRYPOINT [
   "java",
   "-XX:+UseContainerSupport",
