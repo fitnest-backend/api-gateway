@@ -125,4 +125,4 @@ jobs:
         run: |
           curl -k -X POST \
             -H "Authorization: Bearer ${{ secrets.ARGOCD_TOKEN }}" \
-            https://argocd.your-domain/api/v1/applications/fitnest-api-gateway-dev/sync
+            http://161.97.183.7:31052/api/v1/applications/fitnest-api-gateway-dev/sync
