@@ -31,30 +31,45 @@ public class AuthFilterConfig {
     @Bean
     public GlobalFilter authFilter() {
         return (exchange, chain) -> {
-            String path = exchange.getRequest().getPath().value();
+            ServerWebExchange sanitizedExchange = sanitizeHeaders(exchange);
+            String path = sanitizedExchange.getRequest().getPath().value();
 
             // Block internal service-to-service endpoints - these should never be exposed via gateway
             if (path.contains("/internal/")) {
-                return ResponseUtils.respondWithForbidden(exchange.getResponse());
+                return ResponseUtils.respondWithForbidden(sanitizedExchange.getResponse());
             }
 
             // Bypass auth and rate limiting for OpenAPI docs and Swagger UI
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
-                return chain.filter(exchange);
+                return chain.filter(sanitizedExchange);
             }
 
-            String method = exchange.getRequest().getMethod().name();
-            String clientIP = RequestUtils.extractClientIP(exchange.getRequest());
+            String method = sanitizedExchange.getRequest().getMethod().name();
+            String clientIP = RequestUtils.extractClientIP(sanitizedExchange.getRequest());
 
             return rateLimiter.checkRateLimit(clientIP, path, method)
                     .flatMap(result -> {
                         if (result == -1) {
-                            return ResponseUtils.respondWithTooManyRequests(exchange.getResponse());
+                            return ResponseUtils.respondWithTooManyRequests(sanitizedExchange.getResponse());
                         }
 
-                        return proceedWithAuth(exchange, chain, path, method, clientIP);
+                        return proceedWithAuth(sanitizedExchange, chain, path, method, clientIP);
                     });
         };
+    }
+
+    private ServerWebExchange sanitizeHeaders(ServerWebExchange exchange) {
+        return exchange.mutate()
+                .request(exchange.getRequest().mutate()
+                        .headers(h -> {
+                            h.remove("X-User-Id");
+                            h.remove("X-User-Email");
+                            h.remove("X-User-Roles");
+                            h.remove("X-Internal-Token");
+                            h.remove("X-Internal-Service");
+                        })
+                        .build())
+                .build();
     }
 
     private Mono<Void> proceedWithAuth(ServerWebExchange exchange, GatewayFilterChain chain, String path, String method, String clientIP) {
