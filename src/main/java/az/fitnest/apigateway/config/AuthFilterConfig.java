@@ -34,12 +34,10 @@ public class AuthFilterConfig {
             ServerWebExchange sanitizedExchange = sanitizeHeaders(exchange);
             String path = sanitizedExchange.getRequest().getPath().value();
 
-            // Block internal service-to-service endpoints - these should never be exposed via gateway
             if (path.contains("/internal/")) {
                 return ResponseUtils.respondWithForbidden(sanitizedExchange.getResponse());
             }
 
-            // Bypass auth and rate limiting for OpenAPI docs and Swagger UI
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
                 return chain.filter(sanitizedExchange);
             }

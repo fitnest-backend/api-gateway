@@ -22,6 +22,7 @@ public class JwtProcessor {
     private final ReactiveRedisTemplate<String, String> redisTemplate;
 
     private Key signingKey;
+    private io.jsonwebtoken.JwtParser jwtParser;
 
     public JwtProcessor(ReactiveRedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -30,6 +31,9 @@ public class JwtProcessor {
     @PostConstruct
     public void init() {
         this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
+        this.jwtParser = Jwts.parserBuilder()
+                .setSigningKey(signingKey)
+                .build();
     }
 
     public String generateJti() {
@@ -50,11 +54,7 @@ public class JwtProcessor {
         }
 
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(signingKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = jwtParser.parseClaimsJws(token).getBody();
 
             if (claims.getExpiration() != null && claims.getExpiration().before(new java.util.Date())) {
                 return Mono.just(new TokenValidationResult(false, null, null, null, null));

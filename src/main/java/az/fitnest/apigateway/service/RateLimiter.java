@@ -34,6 +34,9 @@ public class RateLimiter {
 
     private static final Duration RATE_WINDOW = Duration.ofMinutes(1);
 
+    private static final java.util.regex.Pattern ID_PATTERN = java.util.regex.Pattern.compile("/\\d+");
+    private static final java.util.regex.Pattern UUID_PATTERN = java.util.regex.Pattern.compile("/[a-f0-9]{24}");
+
     public RateLimiter(ReactiveRedisTemplate<String, String> redisTemplate, RateLimitConfig rateLimitConfig) {
         this.redisTemplate = redisTemplate;
         this.rateLimitConfig = rateLimitConfig;
@@ -65,9 +68,8 @@ public class RateLimiter {
             return path;
         }
 
-        return path
-                .replaceAll("/\\d+", "/*")
-                .replaceAll("/[a-f0-9]{24}", "/*");
+        String normalized = ID_PATTERN.matcher(path).replaceAll("/*");
+        return UUID_PATTERN.matcher(normalized).replaceAll("/*");
     }
-
+}
 }
