@@ -22,7 +22,8 @@ public class ResponseUtils {
         return response.setComplete();
     }
 
-    public static Mono<Void> respondWithTooManyRequests(ServerHttpResponse response) {
+    public static Mono<Void> respondWithTooManyRequests(org.springframework.web.server.ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.TOO_MANY_REQUESTS);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
         response.getHeaders().add("X-RateLimit-Remaining", "0");
@@ -34,7 +35,7 @@ public class ResponseUtils {
                         .code("TOO_MANY_REQUESTS")
                         .message("Rate limit exceeded. Please wait 1 minute before making another request.")
                         .status(HttpStatus.TOO_MANY_REQUESTS.value())
-                        .path("/api/rate-limited")
+                        .path(exchange.getRequest().getPath().value())
                         .build())
                 .build();
 

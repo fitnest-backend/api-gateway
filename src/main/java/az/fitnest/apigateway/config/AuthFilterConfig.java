@@ -48,7 +48,7 @@ public class AuthFilterConfig {
             return rateLimiter.checkRateLimit(clientIP, path, method)
                     .flatMap(result -> {
                         if (result == -1) {
-                            return ResponseUtils.respondWithTooManyRequests(sanitizedExchange.getResponse());
+                            return ResponseUtils.respondWithTooManyRequests(sanitizedExchange);
                         }
 
                         return proceedWithAuth(sanitizedExchange, chain, path, method, clientIP);
