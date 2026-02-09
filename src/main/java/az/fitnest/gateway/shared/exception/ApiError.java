@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.exception;
+package az.fitnest.gateway.shared.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.web.support;
+package az.fitnest.gateway.web.support;
 
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;

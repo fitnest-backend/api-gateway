@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.service;
+package az.fitnest.gateway.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

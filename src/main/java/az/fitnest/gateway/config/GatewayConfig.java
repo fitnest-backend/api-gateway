@@ -1,6 +1,6 @@
-package az.fitnest.apigateway.config;
+package az.fitnest.gateway.config;
 
-import az.fitnest.apigateway.web.support.RequestUtils;
+import az.fitnest.gateway.web.support.RequestUtils;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.context.annotation.Bean;

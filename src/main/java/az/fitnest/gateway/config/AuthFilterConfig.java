@@ -1,13 +1,13 @@
-package az.fitnest.apigateway.config;
+package az.fitnest.gateway.config;
 
-import az.fitnest.apigateway.service.BlockManager;
-import az.fitnest.apigateway.service.JwtProcessor;
-import az.fitnest.apigateway.service.RateLimiter;
-import az.fitnest.apigateway.security.support.CsrfValidator;
-import az.fitnest.apigateway.security.support.PathValidator;
-import az.fitnest.apigateway.security.support.SecurityHeaders;
-import az.fitnest.apigateway.web.support.RequestUtils;
-import az.fitnest.apigateway.web.support.ResponseUtils;
+import az.fitnest.gateway.service.BlockManager;
+import az.fitnest.gateway.service.JwtProcessor;
+import az.fitnest.gateway.service.RateLimiter;
+import az.fitnest.gateway.security.support.CsrfValidator;
+import az.fitnest.gateway.security.support.PathValidator;
+import az.fitnest.gateway.security.support.SecurityHeaders;
+import az.fitnest.gateway.web.support.RequestUtils;
+import az.fitnest.gateway.web.support.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

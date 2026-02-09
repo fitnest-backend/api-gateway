@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.service;
+package az.fitnest.gateway.service;
 
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.dto.common;
+package az.fitnest.gateway.shared.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

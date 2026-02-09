@@ -1,6 +1,6 @@
-package az.fitnest.apigateway.exception;
+package az.fitnest.gateway.shared.exception;
 
-import az.fitnest.apigateway.exception.support.ErrorResponseBuilder;
+import az.fitnest.gateway.shared.exception.support.ErrorResponseBuilder;
 import org.springframework.cloud.gateway.support.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

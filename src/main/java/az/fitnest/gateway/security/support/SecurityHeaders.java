@@ -1,4 +1,4 @@
-package az.fitnest.apigateway.security.support;
+package az.fitnest.gateway.security.support;
 
 import org.springframework.http.server.reactive.ServerHttpResponse;
 

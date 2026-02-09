@@ -1,6 +1,6 @@
-package az.fitnest.apigateway.service;
+package az.fitnest.gateway.service;
 
-import az.fitnest.apigateway.config.RateLimitConfig;
+import az.fitnest.gateway.config.RateLimitConfig;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
