@@ -39,14 +39,19 @@ public class CorsConfig {
                 "Origin",
                 "Accept",
                 "Accept-Encoding",
-                "Accept-Language"
+                "Accept-Language",
+                "X-Internal-Token",
+                "X-User-Id",
+                "X-User-Email",
+                "X-User-Roles",
+                "X-Request-ID"
         ));
 
         config.setAllowCredentials(true);
 
         config.setMaxAge(3600L);
 
-        config.setExposedHeaders(List.of("X-CSRF-Token"));
+        config.setExposedHeaders(List.of("X-CSRF-Token", "X-Internal-Token", "X-User-Id", "X-User-Email", "X-User-Roles", "X-Request-ID"));
 
         CorsConfigurationSource source = new CorsConfigurationSource() {
             @Override
