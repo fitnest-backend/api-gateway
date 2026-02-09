@@ -63,8 +63,6 @@ public class AuthFilterConfig {
                             h.remove("X-User-Id");
                             h.remove("X-User-Email");
                             h.remove("X-User-Roles");
-                            h.remove("X-Internal-Token");
-                            h.remove("X-Internal-Service");
                         })
                         .build())
                 .build();
