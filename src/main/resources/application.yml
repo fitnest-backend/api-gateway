@@ -5,6 +5,8 @@ server:
 spring:
   application:
     name: api-gateway
+  main:
+    lazy-initialization: false
   data:
     redis:
       host: ${REDIS_HOST:redis.fitnest-dev.svc.cluster.local}
@@ -211,6 +213,10 @@ management:
 springdoc:
   swagger-ui:
     path: /swagger-ui/index.html
+    doc-expansion: none
+    display-request-duration: true
+    operations-sorter: alpha
+    tags-sorter: alpha
     urls:
       - url: /v3/api-docs/iam-service
         name: iam-service
