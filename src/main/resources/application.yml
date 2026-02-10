@@ -15,9 +15,9 @@ spring:
     lazy-initialization: ${SPRING_MAIN_LAZY_INITIALIZATION:false}
   data:
     redis:
-      host: ${REDIS_HOST:redis.fitnest-dev.svc.cluster.local}
-      port: ${REDIS_PORT:6379}
-      timeout: ${REDIS_TIMEOUT:2000ms}
+      host: ${SPRING_REDIS_HOST:redis.fitnest-dev.svc.cluster.local}
+      port: ${SPRING_REDIS_PORT:6379}
+      timeout: ${SPRING_REDIS_TIMEOUT:2000ms}
   
   cloud:
     openfeign:
@@ -100,7 +100,19 @@ spring:
           filters:
             - StripPrefix=0
 
+        - id: fitness-plan-service
+          uri: http://fitness-plan-service:8080
+          predicates:
+            - Path=/api/v1/nutrition-plans/**,/api/v1/workout-plans/**
+          filters:
+            - StripPrefix=0
 
+        - id: argocd
+          uri: http://argocd-server.argocd.svc:8080
+          predicates:
+            - Path=/api/v1/applications/**,/api/v1/stream/applications/**
+          filters:
+            - StripPrefix=0
 
         - id: user-service
           uri: http://user-service:8080
@@ -178,6 +190,13 @@ spring:
           uri: http://user-service:8080
           predicates:
             - Path=/v3/api-docs/user-service
+          filters:
+            - SetPath=/v3/api-docs
+
+        - id: fitness-plan-service-openapi
+          uri: http://fitness-plan-service:8080
+          predicates:
+            - Path=/v3/api-docs/fitness-plan-service
           filters:
             - SetPath=/v3/api-docs
 
@@ -261,3 +280,5 @@ springdoc:
         name: support-service
       - url: /v3/api-docs/user-service
         name: user-service
+      - url: /v3/api-docs/fitness-plan-service
+        name: fitness-plan-service
