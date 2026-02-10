@@ -11,13 +11,15 @@ server:
 spring:
   application:
     name: api-gateway
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
     lazy-initialization: ${SPRING_MAIN_LAZY_INITIALIZATION:false}
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:redis.fitnest-dev.svc.cluster.local}
-      port: ${SPRING_REDIS_PORT:6379}
-      timeout: ${SPRING_REDIS_TIMEOUT:2000ms}
+      host: ${SPRING_REDIS_HOST:${REDIS_HOST:redis.fitnest-dev.svc.cluster.local}}
+      port: ${SPRING_REDIS_PORT:${REDIS_PORT:6379}}
+      timeout: ${SPRING_REDIS_TIMEOUT:${REDIS_TIMEOUT:2000ms}}
   
   cloud:
     openfeign:
