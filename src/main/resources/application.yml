@@ -34,7 +34,6 @@ spring:
             connect-timeout: ${FEIGN_CONNECT_TIMEOUT:5000}
             read-timeout: ${FEIGN_READ_TIMEOUT:10000}
             logger-level: BASIC
-  cloud:
     gateway:
       routes:
         - id: iam-service
