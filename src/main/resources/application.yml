@@ -53,19 +53,6 @@ spring:
           filters:
             - StripPrefix=0
 
-        - id: catalog-service
-          uri: http://catalog-service:8080
-          predicates:
-            - Path=/api/v1/catalog/**,/api/v1/categories/**,/api/v1/products/**
-          filters:
-            - StripPrefix=0
-
-        - id: commerce-service
-          uri: http://commerce-service:8080
-          predicates:
-            - Path=/api/v1/cart/**,/api/v1/orders/**
-          filters:
-            - StripPrefix=0
 
         - id: marketplace-service
           uri: http://marketplace-service:8080
@@ -88,12 +75,6 @@ spring:
           filters:
             - StripPrefix=0
 
-        - id: subscription-service
-          uri: http://subscription-service:8080
-          predicates:
-            - Path=/api/v1/subscriptions/**
-          filters:
-            - StripPrefix=0
 
         - id: support-service
           uri: http://support-service:8080
@@ -139,19 +120,6 @@ spring:
           filters:
             - SetPath=/v3/api-docs
 
-        - id: catalog-service-openapi
-          uri: http://catalog-service:8080
-          predicates:
-            - Path=/v3/api-docs/catalog-service
-          filters:
-            - SetPath=/v3/api-docs
-
-        - id: commerce-service-openapi
-          uri: http://commerce-service:8080
-          predicates:
-            - Path=/v3/api-docs/commerce-service
-          filters:
-            - SetPath=/v3/api-docs
 
         - id: marketplace-service-openapi
           uri: http://marketplace-service:8080
@@ -171,13 +139,6 @@ spring:
           uri: http://payment-service:8080
           predicates:
             - Path=/v3/api-docs/payment-service
-          filters:
-            - SetPath=/v3/api-docs
-
-        - id: subscription-service-openapi
-          uri: http://subscription-service:8080
-          predicates:
-            - Path=/v3/api-docs/subscription-service
           filters:
             - SetPath=/v3/api-docs
 
@@ -266,18 +227,12 @@ springdoc:
         name: identity-service
       - url: /v3/api-docs/media-service
         name: media-service
-      - url: /v3/api-docs/catalog-service
-        name: catalog-service
-      - url: /v3/api-docs/commerce-service
-        name: commerce-service
       - url: /v3/api-docs/marketplace-service
         name: marketplace-service
       - url: /v3/api-docs/notifications-service
         name: notifications-service
       - url: /v3/api-docs/payment-service
         name: payment-service
-      - url: /v3/api-docs/subscription-service
-        name: subscription-service
       - url: /v3/api-docs/support-service
         name: support-service
       - url: /v3/api-docs/user-service
