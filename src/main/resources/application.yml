@@ -247,3 +247,9 @@ springdoc:
         name: fitness-plan-service
       - url: /v3/api-docs/order-service
         name: order-service
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+    az.fitnest.gateway: DEBUG
