@@ -12,9 +12,6 @@ import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.Set;
@@ -25,11 +22,8 @@ import org.springframework.web.server.ServerWebExchange;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex, ServerWebExchange exchange) {
-        logger.error("Unexpected error in API Gateway: ", ex);
         return ErrorResponseBuilder.internalServerError("An unexpected error occurred in the API Gateway", exchange.getRequest().getPath().value());
     }
 
@@ -102,15 +96,15 @@ public class GlobalExceptionHandler {
         
         // Check if this looks like a security scan - log at debug level only
         if (isSuspiciousPath(path)) {
-            logger.debug("Blocked suspicious request to: {}", path);
+            //logger.debug("Blocked suspicious request to: {}", path);
         } else if (path.equals("/") || path.equals("")) {
             // Root path request - common from health checks or misconfigured clients
-            logger.debug("Root path request received - no handler configured for /");
+            //logger.debug("Root path request received - no handler configured for /");
         } else if (path.startsWith("/api/")) {
             // This is an API path that doesn't match any route - worth noting
-            logger.warn("No route configured for API path: {}", path);
+            //logger.warn("No route configured for API path: {}", path);
         } else {
-            logger.debug("No static resource found for path: {}", path);
+            //logger.debug("No static resource found for path: {}", path);
         }
         
         return ErrorResponseBuilder.notFound("The requested resource was not found.", path);
@@ -125,12 +119,12 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
         
         if (status == HttpStatus.NOT_FOUND) {
-            logger.debug("Resource not found: {}", path);
+            //logger.debug("Resource not found: {}", path);
             return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resource not found", path);
         } else if (status.is4xxClientError()) {
             return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Bad request", path);
         } else {
-            logger.error("ResponseStatusException with status {}: {}", status, ex.getMessage());
+            //logger.error("ResponseStatusException with status {}: {}", status, ex.getMessage());
             return ErrorResponseBuilder.internalServerError("An error occurred processing your request", path);
         }
     }
