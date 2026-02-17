@@ -1,0 +1,208 @@
+// This file is a copy of gym_service.proto for proto compilation in api-gateway
+syntax = "proto3";
+
+package marketplace;
+
+service GymService {
+  rpc GetGymDetail(GetGymDetailRequest) returns (GymDetailResponse);
+  rpc GetGymImages(GetGymImagesRequest) returns (GymImageResponse);
+  rpc GetGymPackages(GetGymPackagesRequest) returns (GymPackagesResponse);
+  rpc GetPackageIncludes(GetPackageIncludesRequest) returns (GymPackageIncludesResponse);
+  rpc GetTrainers(GetTrainersRequest) returns (GymTrainersResponse);
+  rpc GetReviews(GetReviewsRequest) returns (GymReviewsResponse);
+  rpc AddReview(AddReviewRequest) returns (AddReviewResponse);
+  rpc GetReservationRules(GetReservationRulesRequest) returns (ReservationRulesResponse);
+  rpc GetMainPageGyms(GetMainPageGymsRequest) returns (GetMainPageGymsResponse);
+  // Admin endpoints
+  rpc AddPackage(AddPackageRequest) returns (AddPackageResponse);
+  rpc UpdatePackage(UpdatePackageRequest) returns (UpdatePackageResponse);
+  rpc DeletePackage(DeletePackageRequest) returns (DeletePackageResponse);
+  rpc AddTrainer(AddTrainerRequest) returns (AddTrainerResponse);
+  rpc UpdateTrainer(UpdateTrainerRequest) returns (UpdateTrainerResponse);
+  rpc DeleteTrainer(DeleteTrainerRequest) returns (DeleteTrainerResponse);
+  rpc CreateGym(CreateGymRequest) returns (CreateGymResponse);
+  rpc UpdateGym(UpdateGymRequest) returns (UpdateGymResponse);
+}
+
+// Message definitions
+
+message GetGymDetailRequest {
+  string gym_id = 1;
+}
+
+message GymDetailResponse {
+  string gym_id = 1;
+  string name = 2;
+  string description = 3;
+  string location = 4;
+  string contact_number = 5;
+  string email = 6;
+  string website = 7;
+}
+
+message GetGymImagesRequest {
+  string gym_id = 1;
+}
+
+message GymImageResponse {
+  repeated string image_urls = 1;
+}
+
+message GetGymPackagesRequest {
+  string gym_id = 1;
+}
+
+message GymPackagesResponse {
+  repeated Package packages = 1;
+}
+
+message Package {
+  string package_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message GetPackageIncludesRequest {
+  string package_id = 1;
+}
+
+message GymPackageIncludesResponse {
+  repeated string includes = 1;
+}
+
+message GetTrainersRequest {
+  string gym_id = 1;
+}
+
+message GymTrainersResponse {
+  repeated Trainer trainers = 1;
+}
+
+message Trainer {
+  string trainer_id = 1;
+  string name = 2;
+  string expertise = 3;
+}
+
+message GetReviewsRequest {
+  string gym_id = 1;
+}
+
+message GymReviewsResponse {
+  repeated Review reviews = 1;
+}
+
+message Review {
+  string review_id = 1;
+  string user_id = 2;
+  string gym_id = 3;
+  string comment = 4;
+  int32 rating = 5;
+}
+
+message AddReviewRequest {
+  string gym_id = 1;
+  string user_id = 2;
+  string comment = 3;
+  int32 rating = 4;
+}
+
+message AddReviewResponse {
+  string review_id = 1;
+}
+
+message GetReservationRulesRequest {
+  string gym_id = 1;
+}
+
+message ReservationRulesResponse {
+  string rules = 1;
+}
+
+message GetMainPageGymsRequest {}
+
+message GetMainPageGymsResponse {
+  repeated GymSummary gyms = 1;
+}
+
+message GymSummary {
+  string gym_id = 1;
+  string name = 2;
+  string location = 3;
+}
+
+message AddPackageRequest {
+  string gym_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message AddPackageResponse {
+  string package_id = 1;
+}
+
+message UpdatePackageRequest {
+  string package_id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message UpdatePackageResponse {}
+
+message DeletePackageRequest {
+  string package_id = 1;
+}
+
+message DeletePackageResponse {}
+
+message AddTrainerRequest {
+  string gym_id = 1;
+  string name = 2;
+  string expertise = 3;
+}
+
+message AddTrainerResponse {
+  string trainer_id = 1;
+}
+
+message UpdateTrainerRequest {
+  string trainer_id = 1;
+  string name = 2;
+  string expertise = 3;
+}
+
+message UpdateTrainerResponse {}
+
+message DeleteTrainerRequest {
+  string trainer_id = 1;
+}
+
+message DeleteTrainerResponse {}
+
+message CreateGymRequest {
+  string name = 1;
+  string description = 2;
+  string location = 3;
+  string contact_number = 4;
+  string email = 5;
+  string website = 6;
+}
+
+message CreateGymResponse {
+  string gym_id = 1;
+}
+
+message UpdateGymRequest {
+  string gym_id = 1;
+  string name = 2;
+  string description = 3;
+  string location = 4;
+  string contact_number = 5;
+  string email = 6;
+  string website = 7;
+}
+
+message UpdateGymResponse {}
