@@ -41,7 +41,7 @@ spring:
         - id: identity-service
           uri: http://identity-service:8080
           predicates:
-            - Path=/api/v1/auth/**,/api/v1/admin/**,/api/v1/legal/**
+            - Path=/api/v1/auth/**,/api/v1/admin/users/**,/api/v1/admin/legal/**,/api/v1/legal/**,/api/v1/me/consents
           filters:
             - StripPrefix=0
             - RequestRateLimiter=redisRateLimiter
@@ -57,7 +57,7 @@ spring:
         - id: marketplace-service
           uri: http://marketplace-service:8080
           predicates:
-            - Path=/api/v1/trainers/**,/api/v1/programs/**,/api/v1/checkout/**,/api/v1/gyms/**,/api/v1/marketplace/**
+            - Path=/api/v1/marketplace/**,/api/v1/checkout/**,/api/v1/gyms/**,/api/v1/admin/categories/**,/api/v1/trainers/**,/api/v1/programs/**
           filters:
             - StripPrefix=0
 
