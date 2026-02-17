@@ -28,8 +28,12 @@ public class PathValidator {
                path.startsWith("/api/v1/media/upload") ||
                path.startsWith("/api/v1/media/delete") ||
                path.startsWith("/api/v1/media/move") ||
+               path.startsWith("/api/v1/marketplace/") ||
+               path.startsWith("/api/v1/gyms/") ||
+               path.startsWith("/api/v1/checkout/") ||
                AUTH_REQUIRED_PATHS.contains(path) ||
                requiresAuthForContent(path);
+
     }
 
     public static boolean isAdminRoute(String path) {

@@ -56,9 +56,10 @@ spring:
         - id: marketplace-service
           uri: http://marketplace-service:8080
           predicates:
-            - Path=/api/v1/marketplace/stores,/api/v1/marketplace/stores/*,/api/v1/marketplace/filters,/api/v1/marketplace/upload-image,/api/v1/marketplace/main-page-stores,/api/v1/marketplace/admin/stores,/api/v1/marketplace/admin/stores/*,/api/v1/gyms/*,/api/v1/gyms/*/images,/api/v1/gyms/*/packages,/api/v1/gyms/*/packages/*/includes,/api/v1/gyms/*/trainers,/api/v1/gyms/*/reviews,/api/v1/gyms/*/reservation-rules,/api/v1/gyms/main-page-gyms,/api/v1/gyms/admin,/api/v1/gyms/admin/*,/api/v1/gyms/admin/*/packages,/api/v1/gyms/admin/*/packages/*,/api/v1/gyms/admin/*/trainers,/api/v1/gyms/admin/*/trainers/*,/api/v1/admin/categories,/api/v1/admin/categories/*,/api/v1/admin/categories/*/photo,/api/v1/checkout,/api/v1/checkout/*
+            - Path=/api/v1/marketplace/**,/api/v1/gyms/**,/api/v1/admin/categories/**,/api/v1/checkout/**
           filters:
             - StripPrefix=0
+
 
         - id: notifications-service
           uri: http://notifications-service:8080
