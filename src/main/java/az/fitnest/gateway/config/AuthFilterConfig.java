@@ -16,8 +16,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Configuration
 public class AuthFilterConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthFilterConfig.class);
 
     @Autowired
     private RateLimiter rateLimiter;
@@ -106,6 +111,7 @@ public class AuthFilterConfig {
         return blockManager.isBlocked(clientIP, validation.email)
                 .flatMap(blocked -> {
                     if (blocked) {
+                        log.warn("Blocking request from clientIP={} email={} path={}", clientIP, validation.email, path);
                         return ResponseUtils.respondWithForbidden(exchange.getResponse());
                     }
 

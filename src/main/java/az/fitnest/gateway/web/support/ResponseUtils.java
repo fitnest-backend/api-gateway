@@ -9,6 +9,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class ResponseUtils {
 
@@ -51,7 +52,19 @@ public class ResponseUtils {
     public static Mono<Void> respondWithForbidden(ServerHttpResponse response) {
         response.setStatusCode(HttpStatus.FORBIDDEN);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        return response.setComplete();
+        Map<String, Object> payload = Map.of(
+                "error", Map.of(
+                        "code", "FORBIDDEN",
+                        "message", "Access is forbidden (possible block or insufficient permissions)"
+                )
+        );
+        try {
+            String json = OBJECT_MAPPER.writeValueAsString(payload);
+            byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
+        } catch (JsonProcessingException e) {
+            return response.setComplete();
+        }
     }
 
     public static Mono<Void> respondWithUnauthorized(ServerHttpResponse response) {
