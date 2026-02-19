@@ -1,7 +1,7 @@
-// This file is a copy of gym_service.proto for proto compilation in api-gateway
 syntax = "proto3";
 
 package marketplace;
+option java_multiple_files = true;
 
 service GymService {
   rpc GetGymDetail(GetGymDetailRequest) returns (GymDetailResponse);
@@ -22,187 +22,258 @@ service GymService {
   rpc DeleteTrainer(DeleteTrainerRequest) returns (DeleteTrainerResponse);
   rpc CreateGym(CreateGymRequest) returns (CreateGymResponse);
   rpc UpdateGym(UpdateGymRequest) returns (UpdateGymResponse);
+  // New endpoint for adding/updating gym images
+  rpc PutGymImage(PutGymImageRequest) returns (PutGymImageResponse);
 }
-
-// Message definitions
 
 message GetGymDetailRequest {
-  string gym_id = 1;
+  int64 user_id = 1;
+  int64 gym_id = 2;
 }
-
 message GymDetailResponse {
   string gym_id = 1;
   string name = 2;
   string description = 3;
-  string location = 4;
-  string contact_number = 5;
-  string email = 6;
-  string website = 7;
+  string status = 4;
+  string cover_image_url = 5;
+  Address address = 6;
+  string phone = 7;
+  string email = 8;
+  repeated GymSocialLink social_links = 9;
+  repeated GymWorkHour work_hours = 10;
+  double rating = 11;
+  int32 reviews_count = 12;
+  bool is_saved = 13;
+  repeated Category categories = 14;
 }
-
+message Address {
+  string address_text = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+message GymSocialLink {
+  string name = 1;
+  string url = 2;
+}
+message GymWorkHour {
+  string day = 1;
+  string from = 2;
+  string to = 3;
+}
+message Category {
+  int64 id = 1;
+  string name = 2;
+  string photo_url = 3;
+}
 message GetGymImagesRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
 }
-
 message GymImageResponse {
-  repeated string image_urls = 1;
+  repeated GymImageItem items = 1;
 }
-
+message GymImageItem {
+  string image_id = 1;
+  string url = 2;
+  string type = 3;
+  string title = 4;
+}
 message GetGymPackagesRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
 }
-
 message GymPackagesResponse {
-  repeated Package packages = 1;
+  repeated GymPlanItem items = 1;
 }
-
-message Package {
-  string package_id = 1;
+message GymPlanItem {
+  string plan_id = 1;
   string name = 2;
-  string description = 3;
-  double price = 4;
+  double price = 3;
+  string currency = 4;
+  string billing_period = 5;
+  repeated GymPlanBenefit benefits = 6;
+  bool is_active = 7;
+  int32 sort_order = 8;
 }
-
+message GymPlanBenefit {
+  string logo = 1;
+  string description = 2;
+}
 message GetPackageIncludesRequest {
-  string package_id = 1;
+  int64 gym_id = 1;
+  int64 package_id = 2;
 }
-
 message GymPackageIncludesResponse {
-  repeated string includes = 1;
+  string plan_id = 1;
+  repeated GymPlanBenefit items = 2;
 }
-
 message GetTrainersRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
 }
-
 message GymTrainersResponse {
-  repeated Trainer trainers = 1;
+  repeated GymTrainer items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
 }
-
-message Trainer {
+message GymTrainer {
   string trainer_id = 1;
-  string name = 2;
-  string expertise = 3;
+  string full_name = 2;
+  string specialization = 3;
+  string image_url = 4;
 }
-
 message GetReviewsRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  string sort = 4;
 }
-
 message GymReviewsResponse {
-  repeated Review reviews = 1;
+  repeated GymReview items = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  int64 total = 4;
 }
-
-message Review {
+message GymReview {
   string review_id = 1;
-  string user_id = 2;
-  string gym_id = 3;
-  string comment = 4;
-  int32 rating = 5;
-}
-
-message AddReviewRequest {
-  string gym_id = 1;
-  string user_id = 2;
+  int32 rating = 2;
   string comment = 3;
-  int32 rating = 4;
+  string created_at = 4;
+  GymReviewAuthor author = 5;
 }
-
+message GymReviewAuthor {
+  string user_id = 1;
+  string full_name = 2;
+  string avatar_url = 3;
+}
+message AddReviewRequest {
+  int64 user_id = 1;
+  int64 gym_id = 2;
+  int32 rating = 3;
+  string comment = 4;
+}
 message AddReviewResponse {
-  string review_id = 1;
+  bool success = 1;
 }
-
 message GetReservationRulesRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
 }
-
 message ReservationRulesResponse {
-  string rules = 1;
+  bool reservation_required = 1;
+  int32 max_reservations_per_day = 2;
+  int32 cancel_before_minutes = 3;
 }
-
-message GetMainPageGymsRequest {}
-
+message GetMainPageGymsRequest {
+  double lat = 1;
+  double lng = 2;
+}
 message GetMainPageGymsResponse {
-  repeated GymSummary gyms = 1;
+  repeated GymMainPage items = 1;
 }
-
-message GymSummary {
+message GymMainPage {
   string gym_id = 1;
   string name = 2;
-  string location = 3;
+  string image_url = 3;
+  double stars = 4;
+  bool is_new = 5;
+  string location = 6;
+  double distance_km = 7;
 }
-
+// Admin requests and responses
 message AddPackageRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
   string name = 2;
-  string description = 3;
-  double price = 4;
+  double price = 3;
+  string currency = 4;
+  string billing_period = 5;
+  repeated GymPlanBenefit benefits = 6;
+  bool is_active = 7;
+  int32 sort_order = 8;
 }
-
 message AddPackageResponse {
-  string package_id = 1;
+  bool success = 1;
 }
-
 message UpdatePackageRequest {
-  string package_id = 1;
-  string name = 2;
-  string description = 3;
+  int64 gym_id = 1;
+  int64 package_id = 2;
+  string name = 3;
   double price = 4;
+  string currency = 5;
+  string billing_period = 6;
+  repeated GymPlanBenefit benefits = 7;
+  bool is_active = 8;
+  int32 sort_order = 9;
 }
-
-message UpdatePackageResponse {}
-
+message UpdatePackageResponse {
+  bool success = 1;
+}
 message DeletePackageRequest {
-  string package_id = 1;
+  int64 gym_id = 1;
+  int64 package_id = 2;
 }
-
-message DeletePackageResponse {}
-
+message DeletePackageResponse {
+  bool success = 1;
+}
 message AddTrainerRequest {
-  string gym_id = 1;
-  string name = 2;
-  string expertise = 3;
+  int64 gym_id = 1;
+  string full_name = 2;
+  string specialization = 3;
+  string image_url = 4;
 }
-
 message AddTrainerResponse {
-  string trainer_id = 1;
+  bool success = 1;
 }
-
 message UpdateTrainerRequest {
-  string trainer_id = 1;
-  string name = 2;
-  string expertise = 3;
+  int64 gym_id = 1;
+  int64 trainer_id = 2;
+  string full_name = 3;
+  string specialization = 4;
+  string image_url = 5;
 }
-
-message UpdateTrainerResponse {}
-
+message UpdateTrainerResponse {
+  bool success = 1;
+}
 message DeleteTrainerRequest {
-  string trainer_id = 1;
+  int64 gym_id = 1;
+  int64 trainer_id = 2;
 }
-
-message DeleteTrainerResponse {}
-
+message DeleteTrainerResponse {
+  bool success = 1;
+}
 message CreateGymRequest {
   string name = 1;
   string description = 2;
-  string location = 3;
-  string contact_number = 4;
-  string email = 5;
-  string website = 6;
+  string status = 3;
+  string cover_image_url = 4;
+  Address address = 5;
+  string phone = 6;
+  string email = 7;
+  repeated string category_ids = 8;
 }
-
 message CreateGymResponse {
-  string gym_id = 1;
+  bool success = 1;
 }
-
 message UpdateGymRequest {
-  string gym_id = 1;
+  int64 gym_id = 1;
   string name = 2;
   string description = 3;
-  string location = 4;
-  string contact_number = 5;
-  string email = 6;
-  string website = 7;
+  string status = 4;
+  string cover_image_url = 5;
+  Address address = 6;
+  string phone = 7;
+  string email = 8;
+  repeated string category_ids = 9;
 }
-
-message UpdateGymResponse {}
+message UpdateGymResponse {
+  bool success = 1;
+}
+// New messages for image upload
+message PutGymImageRequest {
+  int64 gym_id = 1;
+  int64 name_id = 2; // reference to GymImageName PK
+  string url = 3;
+}
+message PutGymImageResponse {
+  bool success = 1;
+  GymImageItem item = 2;
+}

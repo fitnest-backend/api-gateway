@@ -56,7 +56,7 @@ spring:
         - id: marketplace-service
           uri: http://marketplace-service:8080
           predicates:
-            - Path=/api/v1/marketplace/**,/api/v1/gyms/**,/api/v1/stores/**,/api/v1/admin/categories/**,/api/v1/checkout/**
+            - Path=/api/v1/marketplace/**,/api/v1/stores/**,/api/v1/admin/categories/**,/api/v1/checkout/**
           filters:
             - StripPrefix=0
 
@@ -253,3 +253,9 @@ logging:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.security: DEBUG
     az.fitnest.gateway: DEBUG
+
+grpc:
+  client:
+    marketplace-service:
+      address: 'static://marketplace-service:9090'
+      negotiation-type: plaintext
