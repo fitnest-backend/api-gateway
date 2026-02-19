@@ -1,5 +1,7 @@
 package az.fitnest.gateway.web;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,12 +12,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1/stores")
 public class StoreProxyController {
 
+    private static final Logger log = LoggerFactory.getLogger(StoreProxyController.class);
+
     private final WebClient webClient;
+
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     public StoreProxyController(@Value("${MARKETPLACE_SERVICE_URL:http://marketplace-service:8080}") String marketplaceBaseUrl) {
         this.webClient = WebClient.builder()
@@ -33,8 +41,7 @@ public class StoreProxyController {
                     return ub.build();
                 })
                 .headers(h -> copyRelevantHeaders(h, headers))
-                .retrieve()
-                .toEntity(String.class);
+                .exchangeToMono(response -> response.toEntity(String.class));
     }
 
     @GetMapping("/{storeId}")
@@ -42,18 +49,41 @@ public class StoreProxyController {
         return webClient.get()
                 .uri("/api/v1/stores/{id}", storeId)
                 .headers(h -> copyRelevantHeaders(h, headers))
-                .retrieve()
-                .toEntity(String.class);
+                .exchangeToMono(response -> response.toEntity(String.class));
     }
 
     @PostMapping
     public Mono<ResponseEntity<String>> createStore(@RequestBody String body, @RequestHeader Map<String, String> headers) {
+        // Log minimal info to help debug bad requests
+        log.debug("Proxying createStore body length={} headersContainsAuthorization={}",
+                body != null ? body.length() : 0,
+                headers != null && headers.containsKey("authorization"));
+
+        // Basic validation: ensure body is valid JSON and contains non-blank 'name'
+        if (body == null || body.isBlank()) {
+            String errorJson = "{\"error\":{\"message\":\"Request body required\"}}";
+            return Mono.just(ResponseEntity.badRequest().body(errorJson));
+        }
+
+        try {
+            JsonNode root = OBJECT_MAPPER.readTree(body);
+            JsonNode nameNode = root.get("name");
+            if (nameNode == null || nameNode.asText().isBlank()) {
+                String errorJson = "{\"error\":{\"message\":\"Field 'name' is required\"}}";
+                log.debug("Rejecting createStore: missing name in body={}", body);
+                return Mono.just(ResponseEntity.badRequest().body(errorJson));
+            }
+        } catch (Exception e) {
+            String errorJson = "{\"error\":{\"message\":\"Invalid JSON body\"}}";
+            log.debug("Rejecting createStore: invalid JSON body", e);
+            return Mono.just(ResponseEntity.badRequest().body(errorJson));
+        }
+
         return webClient.post()
                 .uri("/api/v1/stores")
                 .headers(h -> copyRelevantHeaders(h, headers))
                 .body(BodyInserters.fromValue(body))
-                .retrieve()
-                .toEntity(String.class);
+                .exchangeToMono(response -> response.toEntity(String.class));
     }
 
     @PostMapping("/admin")
@@ -62,8 +92,7 @@ public class StoreProxyController {
                 .uri("/api/v1/stores/admin")
                 .headers(h -> copyRelevantHeaders(h, headers))
                 .body(BodyInserters.fromValue(body))
-                .retrieve()
-                .toEntity(String.class);
+                .exchangeToMono(response -> response.toEntity(String.class));
     }
 
     private void copyRelevantHeaders(HttpHeaders target, Map<String, String> headers) {
