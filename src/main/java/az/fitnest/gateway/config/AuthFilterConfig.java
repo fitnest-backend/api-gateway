@@ -78,8 +78,8 @@ public class AuthFilterConfig {
         boolean requiresAuth = PathValidator.requiresAuth(path);
         boolean isStateChanging = RequestUtils.isStateChangingMethod(method);
 
-        // Only enforce authentication for endpoints that require auth AND for state-changing HTTP methods (POST, PUT, DELETE, PATCH).
-        if (requiresAuth && isStateChanging && (token == null || token.isEmpty())) {
+        // Enforce authentication for all endpoints that require auth.
+        if (requiresAuth && (token == null || token.isEmpty())) {
             return handleAuthFailure(exchange, clientIP, path);
         }
 
