@@ -29,16 +29,18 @@ public class PathValidator {
         if (path.startsWith("/api/v1/goals/images/")) {
             return false;
         }
-        // Only require auth for admin, user-specific and internal or media protected endpoints.
-        if (path.startsWith("/api/v1/admin/") || AUTH_REQUIRED_PATHS.contains(path)) {
+
+        // Global rule: Any path with /admin/ or /me/ (or just /me) requires authentication
+        if (path.contains("/admin/") || path.endsWith("/admin") || 
+            path.startsWith("/api/v1/me") || path.startsWith("/api/v1/internal/")) {
             return true;
         }
-        return path.startsWith("/api/v1/me") ||
-               path.startsWith("/api/v1/internal/") ||
+
+        // Specific protected endpoints
+        return AUTH_REQUIRED_PATHS.contains(path) ||
                path.startsWith("/api/v1/media/upload") ||
                path.startsWith("/api/v1/media/delete") ||
                path.startsWith("/api/v1/media/move");
-
     }
 
 
