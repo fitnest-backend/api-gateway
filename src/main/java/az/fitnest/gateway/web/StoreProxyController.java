@@ -33,13 +33,21 @@ public class StoreProxyController {
     }
 
     @GetMapping
-    public Mono<ResponseEntity<String>> listStores(@RequestHeader Map<String, String> headers, @RequestParam Map<String, String> params) {
+    public Mono<ResponseEntity<String>> listStores(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int pageSize) {
         return webClient.get()
-                .uri(uriBuilder -> {
-                    var ub = uriBuilder.path("/api/v1/stores");
-                    params.forEach(ub::queryParam);
-                    return ub.build();
-                })
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores")
+                        .queryParam("page", page)
+                        .queryParam("pageSize", pageSize)
+                        .build())
+                .exchangeToMono(response -> response.toEntity(String.class));
+    }
+
+    @GetMapping("/all")
+    public Mono<ResponseEntity<String>> getAllStores(@RequestHeader Map<String, String> headers) {
+        return webClient.get()
+                .uri("/api/v1/stores/all")
                 .headers(h -> copyRelevantHeaders(h, headers))
                 .exchangeToMono(response -> response.toEntity(String.class));
     }

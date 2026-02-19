@@ -71,8 +71,10 @@ public class AuthFilterConfig {
     private Mono<Void> proceedWithAuth(ServerWebExchange exchange, GatewayFilterChain chain, String path, String method, String clientIP) {
         String token = RequestUtils.extractToken(exchange);
         boolean requiresAuth = PathValidator.requiresAuth(path);
+        boolean isStateChanging = RequestUtils.isStateChangingMethod(method);
 
-        if (requiresAuth && (token == null || token.isEmpty())) {
+        // Only enforce authentication for endpoints that require auth AND for state-changing HTTP methods (POST, PUT, DELETE, PATCH).
+        if (requiresAuth && isStateChanging && (token == null || token.isEmpty())) {
             return handleAuthFailure(exchange, clientIP, path);
         }
 
