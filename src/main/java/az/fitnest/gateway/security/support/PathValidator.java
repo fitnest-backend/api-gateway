@@ -7,16 +7,15 @@ public class PathValidator {
     private static final Set<String> CSRF_EXEMPTED_PATHS = Set.of();
 
     private static final Set<String> AUTH_REQUIRED_PATHS = Set.of(
-            "/api/v1/stores",
-            "/api/v1/stores/",
+            // Keep explicit admin-only paths here; don't include general stores routes
             "/api/v1/stores/admin",
             "/api/v1/stores/admin/"
     );
 
     public static boolean requiresAuthForContent(String path) {
-        // Content-modifying endpoints that should always require auth can be added here.
-        // For now, treat any admin or stores endpoints that modify state as requiring auth.
-        return path.startsWith("/api/v1/stores") || path.startsWith("/api/v1/marketplace/");
+        // Only treat clearly admin or internal content-modifying endpoints as requiring auth.
+        // Previously we forced auth for all stores and marketplace content — that's stricter than identity.
+        return path.startsWith("/api/v1/admin/");
     }
 
     private PathValidator() {
@@ -30,23 +29,17 @@ public class PathValidator {
         if (path.startsWith("/api/v1/goals/images/")) {
             return false;
         }
-        // Require auth for store-related endpoints (create/update/delete) and other protected areas
-        if (path.startsWith("/api/v1/stores")) {
+        // Only require auth for admin, user-specific and internal or media protected endpoints.
+        if (path.startsWith("/api/v1/admin/") || AUTH_REQUIRED_PATHS.contains(path)) {
             return true;
         }
         return path.startsWith("/api/v1/me") ||
                path.startsWith("/api/v1/internal/") ||
                path.startsWith("/api/v1/media/upload") ||
                path.startsWith("/api/v1/media/delete") ||
-               path.startsWith("/api/v1/media/move") ||
-               path.startsWith("/api/v1/marketplace/") ||
-               path.startsWith("/api/v1/gyms/") ||
-               path.startsWith("/api/v1/checkout/") ||
-               AUTH_REQUIRED_PATHS.contains(path) ||
-               requiresAuthForContent(path);
+               path.startsWith("/api/v1/media/move");
 
     }
-
 
 
     public static boolean isAdminRoute(String path) {
