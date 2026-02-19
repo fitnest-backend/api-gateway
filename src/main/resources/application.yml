@@ -257,5 +257,5 @@ logging:
 grpc:
   client:
     marketplace-service:
-      address: 'static://marketplace-service:9090'
+      address: 'dns:///marketplace-service.fitnest-dev.svc.cluster.local:9090'
       negotiation-type: plaintext
