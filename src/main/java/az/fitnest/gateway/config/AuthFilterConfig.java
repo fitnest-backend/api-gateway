@@ -45,7 +45,7 @@ public class AuthFilterConfig {
             }
 
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
-                return chain.filter(sanitizedExchange);
+                return chain.filter(addAnonymousHeaders(sanitizedExchange));
             }
 
             String method = sanitizedExchange.getRequest().getMethod().name();
