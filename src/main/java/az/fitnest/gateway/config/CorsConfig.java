@@ -40,7 +40,6 @@ public class CorsConfig {
                 "Accept",
                 "Accept-Encoding",
                 "Accept-Language",
-                "X-User-Id",
                 "X-User-Email",
                 "X-User-Roles",
                 "X-Request-ID"
@@ -50,7 +49,7 @@ public class CorsConfig {
 
         config.setMaxAge(3600L);
 
-        config.setExposedHeaders(List.of("X-CSRF-Token", "X-User-Id", "X-User-Email", "X-User-Roles", "X-Request-ID"));
+        config.setExposedHeaders(List.of("X-CSRF-Token", "X-User-Email", "X-User-Roles", "X-Request-ID"));
 
         CorsConfigurationSource source = new CorsConfigurationSource() {
             @Override

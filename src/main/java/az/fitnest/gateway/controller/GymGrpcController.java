@@ -127,7 +127,7 @@ public class GymGrpcController {
 
     @PostMapping("/{gymId}/reviews")
     public Mono<ResponseEntity<Void>> addReview(
-            @RequestHeader("X-User-Id") Long userId,
+            @RequestHeader(value = "X-User-Id", required = false) Long userId,
             @PathVariable Long gymId,
             @RequestBody Map<String, Object> body) {
         return Mono.fromCallable(() -> {

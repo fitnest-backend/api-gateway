@@ -44,56 +44,7 @@ public class StoreProxyController {
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
-    @GetMapping("/all")
-    public Mono<ResponseEntity<String>> getAllStores(@RequestHeader Map<String, String> headers) {
-        return webClient.get()
-                .uri("/api/v1/stores/all")
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
-    }
-
-    @GetMapping("/{storeId}")
-    public Mono<ResponseEntity<String>> getStore(@PathVariable String storeId, @RequestHeader Map<String, String> headers) {
-        return webClient.get()
-                .uri("/api/v1/stores/{id}", storeId)
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
-    }
-
-    @PostMapping
-    public Mono<ResponseEntity<String>> createStore(@RequestBody String body, @RequestHeader Map<String, String> headers) {
-        // Log minimal info to help debug bad requests
-        log.debug("Proxying createStore body length={} headersContainsAuthorization={}",
-                body != null ? body.length() : 0,
-                headers != null && headers.containsKey("authorization"));
-
-        // Basic validation: ensure body is valid JSON and contains non-blank 'name'
-        if (body == null || body.isBlank()) {
-            String errorJson = "{\"error\":{\"message\":\"Request body required\"}}";
-            return Mono.just(ResponseEntity.badRequest().body(errorJson));
-        }
-
-        try {
-            JsonNode root = OBJECT_MAPPER.readTree(body);
-            JsonNode nameNode = root.get("name");
-            if (nameNode == null || nameNode.asText().isBlank()) {
-                String errorJson = "{\"error\":{\"message\":\"Field 'name' is required\"}}";
-                log.debug("Rejecting createStore: missing name in body={}", body);
-                return Mono.just(ResponseEntity.badRequest().body(errorJson));
-            }
-        } catch (Exception e) {
-            String errorJson = "{\"error\":{\"message\":\"Invalid JSON body\"}}";
-            log.debug("Rejecting createStore: invalid JSON body", e);
-            return Mono.just(ResponseEntity.badRequest().body(errorJson));
-        }
-
-        return webClient.post()
-                .uri("/api/v1/stores")
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .body(BodyInserters.fromValue(body))
-                .exchangeToMono(response -> response.toEntity(String.class));
-    }
-
+    // Proxy for admin endpoints remains
     @PostMapping("/admin")
     public Mono<ResponseEntity<String>> createStoreAdmin(@RequestBody String body, @RequestHeader Map<String, String> headers) {
         return webClient.post()
@@ -103,14 +54,47 @@ public class StoreProxyController {
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
+    @PutMapping("/admin/{storeId}")
+    public Mono<ResponseEntity<String>> updateStoreAdmin(@PathVariable String storeId, @RequestBody String body, @RequestHeader Map<String, String> headers) {
+        return webClient.put()
+                .uri("/api/v1/stores/admin/{id}", storeId)
+                .headers(h -> copyRelevantHeaders(h, headers))
+                .body(BodyInserters.fromValue(body))
+                .exchangeToMono(response -> response.toEntity(String.class));
+    }
+
+    @DeleteMapping("/admin/{storeId}")
+    public Mono<ResponseEntity<String>> deleteStoreAdmin(@PathVariable String storeId, @RequestHeader Map<String, String> headers) {
+        return webClient.delete()
+                .uri("/api/v1/stores/admin/{id}", storeId)
+                .headers(h -> copyRelevantHeaders(h, headers))
+                .exchangeToMono(response -> response.toEntity(String.class));
+    }
+
+    // Changed path to /market to match marketplace change
+    @GetMapping("/fitmarket")
+    public Mono<ResponseEntity<String>> getMarketStores(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores/fitmarket").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).build())
+                .headers(h -> copyRelevantHeaders(h, headers))
+                .exchangeToMono(response -> response.toEntity(String.class));
+    }
+
+    @PostMapping("/{storeId}/favorite")
+    public Mono<ResponseEntity<String>> toggleFavorite(@PathVariable String storeId, @RequestHeader Map<String, String> headers) {
+        return webClient.post()
+                .uri("/api/v1/stores/{id}/favorite", storeId)
+                .headers(h -> copyRelevantHeaders(h, headers))
+                .exchangeToMono(response -> response.toEntity(String.class));
+    }
+
     private void copyRelevantHeaders(HttpHeaders target, Map<String, String> headers) {
-        // Copy Authorization and user headers so marketplace receives identity
+        // Copy Authorization and other non-sensitive user headers so marketplace receives identity.
         if (headers.containsKey("authorization")) {
             target.set(HttpHeaders.AUTHORIZATION, headers.get("authorization"));
         }
-        if (headers.containsKey("x-user-id")) {
-            target.set("X-User-Id", headers.get("x-user-id"));
-        }
+        // Do NOT forward X-User-Id header anymore; marketplace should extract user id from the JWT Authorization header.
+        // Do not forward X-User-Id under any circumstances.
         if (headers.containsKey("x-user-email")) {
             target.set("X-User-Email", headers.get("x-user-email"));
         }

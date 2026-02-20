@@ -66,6 +66,11 @@ public class AuthFilterConfig {
                 .request(exchange.getRequest().mutate()
                         .headers(h -> {
                             h.remove("X-User-Id");
+                            h.remove("X-Tenant-Id");
+                            h.remove("X-Scopes");
+                            h.remove("X-Roles");
+                            h.remove("X-Service-Name");
+                            h.remove("X-From-Gateway");
                             h.remove("X-User-Email");
                             h.remove("X-User-Roles");
                         })
@@ -88,7 +93,8 @@ public class AuthFilterConfig {
                     .flatMap(validation -> handleTokenValidation(exchange, chain, validation, requiresAuth, clientIP, path, token));
         }
 
-        return chain.filter(exchange);
+        // If no token, we still want to add normalized headers for public calls
+        return chain.filter(addAnonymousHeaders(exchange));
     }
 
     private Mono<Void> handleAuthFailure(ServerWebExchange exchange, String clientIP, String path) {
@@ -104,7 +110,7 @@ public class AuthFilterConfig {
             if (requiresAuth) {
                 return handleAuthFailure(exchange, clientIP, path);
             } else {
-                return chain.filter(exchange);
+                return chain.filter(addAnonymousHeaders(exchange));
             }
         }
 
@@ -115,18 +121,31 @@ public class AuthFilterConfig {
                         return ResponseUtils.respondWithForbidden(exchange.getResponse());
                     }
 
-                    ServerWebExchange modifiedExchange = addUserHeaders(exchange, token, validation);
+                    ServerWebExchange modifiedExchange = addUserHeaders(exchange, validation);
                     return chain.filter(modifiedExchange);
                 });
     }
 
-    private ServerWebExchange addUserHeaders(ServerWebExchange exchange, String token, JwtProcessor.TokenValidationResult validation) {
+    private ServerWebExchange addUserHeaders(ServerWebExchange exchange, JwtProcessor.TokenValidationResult validation) {
+        String scopes = validation.roles != null ? String.join(" ", validation.roles) : "";
         return exchange.mutate()
                 .request(exchange.getRequest().mutate()
-                        .header("Authorization", "Bearer " + token)
-                        .header("X-User-Email", validation.email)
+                        .header("X-Request-Id", UUID.randomUUID().toString())
                         .header("X-User-Id", validation.userId != null ? validation.userId.toString() : "")
-                        .header("X-User-Roles", validation.roles != null ? String.join(",", validation.roles) : "")
+                        .header("X-Tenant-Id", "") // Map from claims if available in future
+                        .header("X-Scopes", scopes)
+                        .header("X-Service-Name", "api-gateway")
+                        .header("X-From-Gateway", "1")
+                        .build())
+                .build();
+    }
+
+    private ServerWebExchange addAnonymousHeaders(ServerWebExchange exchange) {
+        return exchange.mutate()
+                .request(exchange.getRequest().mutate()
+                        .header("X-Request-Id", UUID.randomUUID().toString())
+                        .header("X-Service-Name", "api-gateway")
+                        .header("X-From-Gateway", "1")
                         .build())
                 .build();
     }

@@ -39,22 +39,22 @@ spring:
     gateway:
       routes:
         - id: identity-service
-          uri: http://identity-service:8080
+          uri: http://identity-service:9090
           predicates:
             - Path=/api/v1/auth/register,/api/v1/auth/register/complete,/api/v1/auth/login,/api/v1/auth/refresh,/api/v1/auth/logout,/api/v1/auth/me,/api/v1/auth/otp/send,/api/v1/auth/otp/verify,/api/v1/admin/users,/api/v1/admin/users/*,/api/v1/admin/users/*/role,/api/v1/admin/legal/documents,/api/v1/legal/privacy-policy,/api/v1/legal/terms-of-use,/api/v1/legal/consents/accept,/api/v1/me/consents
           filters:
             - StripPrefix=0
             - RequestRateLimiter=redisRateLimiter
 
-        - id: media-service
-          uri: http://media-service:8086
+        - id: storage-service
+          uri: http://storage-service:9090
           predicates:
             - Path=/api/v1/media/**
           filters:
             - StripPrefix=0
 
         - id: marketplace-service
-          uri: http://marketplace-service:8080
+          uri: http://marketplace-service:9090
           predicates:
             - Path=/api/v1/marketplace/**,/api/v1/stores/**,/api/v1/admin/categories/**,/api/v1/checkout/**
           filters:
@@ -62,14 +62,14 @@ spring:
 
 
         - id: notifications-service
-          uri: http://notifications-service:8080
+          uri: http://notifications-service:9090
           predicates:
             - Path=/api/v1/notifications/**,/api/v1/sms/**
           filters:
             - StripPrefix=0
 
         - id: payment-service
-          uri: http://payment-service:8080
+          uri: http://payment-service:9090
           predicates:
             - Path=/api/v1/payments/**,/api/v1/wallets/**
           filters:
@@ -77,14 +77,14 @@ spring:
 
 
         - id: support-service
-          uri: http://support-service:8080
+          uri: http://support-service:9090
           predicates:
             - Path=/api/v1/support/**,/api/v1/tickets/**
           filters:
             - StripPrefix=0
 
         - id: fitness-plan-service
-          uri: http://fitness-plan-service:8080
+          uri: http://fitness-plan-service:9090
           predicates:
             - Path=/api/v1/nutrition-plans/**,/api/v1/workout-plans/**
           filters:
@@ -98,7 +98,7 @@ spring:
             - StripPrefix=0
 
         - id: user-service
-          uri: http://user-service:8080
+          uri: http://user-service:9090
           predicates:
             - Path=/api/v1/users/**,/api/v1/me,/api/v1/me/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**
           filters:
@@ -106,7 +106,7 @@ spring:
             - RequestRateLimiter=redisRateLimiter
 
         - id: order-service
-          uri: http://order-service:8080
+          uri: http://order-service:9090
           predicates:
             - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**
           filters:
@@ -114,7 +114,7 @@ spring:
 
         # OpenAPI doc proxy routes
         - id: identity-service-openapi
-          uri: http://identity-service:8080
+          uri: http://identity-service:9090
           predicates:
             - Path=/v3/api-docs/identity-service
           filters:
@@ -123,49 +123,49 @@ spring:
 
 
         - id: marketplace-service-openapi
-          uri: http://marketplace-service:8080
+          uri: http://marketplace-service:9090
           predicates:
             - Path=/v3/api-docs/marketplace-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: notifications-service-openapi
-          uri: http://notifications-service:8080
+          uri: http://notifications-service:9090
           predicates:
             - Path=/v3/api-docs/notifications-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: payment-service-openapi
-          uri: http://payment-service:8080
+          uri: http://payment-service:9090
           predicates:
             - Path=/v3/api-docs/payment-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: support-service-openapi
-          uri: http://support-service:8080
+          uri: http://support-service:9090
           predicates:
             - Path=/v3/api-docs/support-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: user-service-openapi
-          uri: http://user-service:8080
+          uri: http://user-service:9090
           predicates:
             - Path=/v3/api-docs/user-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: fitness-plan-service-openapi
-          uri: http://fitness-plan-service:8080
+          uri: http://fitness-plan-service:9090
           predicates:
             - Path=/v3/api-docs/fitness-plan-service
           filters:
             - SetPath=/v3/api-docs
 
         - id: order-service-openapi
-          uri: http://order-service:8080
+          uri: http://order-service:9090
           predicates:
             - Path=/v3/api-docs/order-service
           filters:
@@ -186,7 +186,7 @@ resilience4j:
         waitDurationInOpenState: 10s
         failureRateThreshold: 50
         eventConsumerBufferSize: 10
-      media-service:
+      storage-service:
         registerHealthIndicator: true
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
@@ -200,7 +200,7 @@ resilience4j:
       identity-service:
         timeoutDuration: 30s
         cancelRunningFuture: true
-      media-service:
+      storage-service:
         timeoutDuration: 30s
         cancelRunningFuture: true
 
