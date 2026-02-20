@@ -71,11 +71,11 @@ public class StoreProxyController {
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
-    // Changed path to /market to match marketplace change
-    @GetMapping("/fitmarket")
+    // Mapping for marketplace main page: /market (proxies to marketplace /api/v1/stores/market)
+    @GetMapping("/market")
     public Mono<ResponseEntity<String>> getMarketStores(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores/fitmarket").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).build())
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores/market").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).build())
                 .headers(h -> copyRelevantHeaders(h, headers))
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
@@ -88,7 +88,7 @@ public class StoreProxyController {
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
-    private void copyRelevantHeaders(HttpHeaders target, Map<String, String> headers) {
+    private void copyRelevantHeaders(org.springframework.http.HttpHeaders target, Map<String, String> headers) {
         // Copy Authorization and other non-sensitive user headers so marketplace receives identity.
         if (headers.containsKey("authorization")) {
             target.set(HttpHeaders.AUTHORIZATION, headers.get("authorization"));
