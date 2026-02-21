@@ -15,7 +15,7 @@ public class PathValidator {
     public static boolean requiresAuthForContent(String path) {
         // Only treat clearly admin or internal content-modifying endpoints as requiring auth.
         // Previously we forced auth for all stores and marketplace content — that's stricter than identity.
-        return path.startsWith("/api/v1/admin/");
+        return path.contains("/admin/") || path.endsWith("/admin");
     }
 
     private PathValidator() {
