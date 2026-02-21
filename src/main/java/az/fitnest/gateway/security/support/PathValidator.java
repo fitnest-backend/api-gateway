@@ -6,11 +6,7 @@ public class PathValidator {
 
     private static final Set<String> CSRF_EXEMPTED_PATHS = Set.of();
 
-    private static final Set<String> AUTH_REQUIRED_PATHS = Set.of(
-            // Keep explicit admin-only paths here; don't include general stores routes
-            "/api/v1/stores/admin",
-            "/api/v1/stores/admin/"
-    );
+    private static final Set<String> AUTH_REQUIRED_PATHS = Set.of();
 
     public static boolean requiresAuthForContent(String path) {
         // Only treat clearly admin or internal content-modifying endpoints as requiring auth.
