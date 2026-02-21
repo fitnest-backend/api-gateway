@@ -1,0 +1,16 @@
+Reusing configuration cache.
+> Task :check UP-TO-DATE
+> Task :clean
+> Task :processResources
+> Task :generateEffectiveLombokConfig
+> Task :compileJava FROM-CACHE
+> Task :classes
+> Task :resolveMainClassName
+> Task :jar
+> Task :bootJar
+> Task :assemble
+> Task :build
+
+BUILD SUCCESSFUL in 550ms
+7 actionable tasks: 6 executed, 1 from cache
+Configuration cache entry reused.
