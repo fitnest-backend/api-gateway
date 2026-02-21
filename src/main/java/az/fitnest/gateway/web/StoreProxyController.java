@@ -32,15 +32,14 @@ public class StoreProxyController {
                 .build();
     }
 
+    // The root listing now proxies to the marketplace main page (previously at /market)
     @GetMapping
-    public Mono<ResponseEntity<String>> listStores(
-            @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int pageSize) {
+    public Mono<ResponseEntity<String>> getMarketStores(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q,
+                                                         @RequestParam(defaultValue = "1") int page,
+                                                         @RequestParam(defaultValue = "10") int pageSize) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores")
-                        .queryParam("page", page)
-                        .queryParam("pageSize", pageSize)
-                        .build())
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).queryParam("page", page).queryParam("pageSize", pageSize).build())
+                .headers(h -> copyRelevantHeaders(h, headers))
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
@@ -71,11 +70,14 @@ public class StoreProxyController {
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
 
-    // Mapping for marketplace main page: /market (proxies to marketplace /api/v1/stores/market)
+    // Previously this was mapped to /market and proxied to marketplace /api/v1/stores/market.
+    // Keep the /market route available but forward it to the new marketplace root for backwards compatibility.
     @GetMapping("/market")
-    public Mono<ResponseEntity<String>> getMarketStores(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q) {
+    public Mono<ResponseEntity<String>> getMarketStoresAlias(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q,
+                                                             @RequestParam(defaultValue = "1") int page,
+                                                             @RequestParam(defaultValue = "10") int pageSize) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores/market").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).build())
+                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).queryParam("page", page).queryParam("pageSize", pageSize).build())
                 .headers(h -> copyRelevantHeaders(h, headers))
                 .exchangeToMono(response -> response.toEntity(String.class));
     }
