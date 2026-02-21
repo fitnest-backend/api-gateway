@@ -8,100 +8,88 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
+import az.fitnest.gateway.grpc.StoreGrpcClient;
+import az.fitnest.gateway.service.JwtProcessor;
+import az.fitnest.gateway.web.support.RequestUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1/stores")
+@RequiredArgsConstructor
 public class StoreProxyController {
 
-    private static final Logger log = LoggerFactory.getLogger(StoreProxyController.class);
+    private final StoreGrpcClient storeGrpcClient;
+    private final JwtProcessor jwtProcessor;
 
-    private final WebClient webClient;
-
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-    public StoreProxyController(@Value("${MARKETPLACE_SERVICE_URL:http://marketplace-service:8080}") String marketplaceBaseUrl) {
-        this.webClient = WebClient.builder()
-                .baseUrl(marketplaceBaseUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
-    }
-
-    // The root listing now proxies to the marketplace main page (previously at /market)
     @GetMapping
-    public Mono<ResponseEntity<String>> getMarketStores(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q,
+    public Mono<ResponseEntity<String>> getMarketStores(ServerWebExchange exchange, 
+                                                         @RequestParam(value = "q", required = false) String q,
                                                          @RequestParam(defaultValue = "1") int page,
                                                          @RequestParam(defaultValue = "10") int pageSize) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).queryParam("page", page).queryParam("pageSize", pageSize).build())
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
+        return extractUserId(exchange)
+                .map(userId -> storeGrpcClient.getMarketStores(q, page, pageSize, userId))
+                .map(json -> ResponseEntity.ok().header("Content-Type", "application/json").body(json));
     }
 
-    // Proxy for admin endpoints remains
     @PostMapping("/admin")
-    public Mono<ResponseEntity<String>> createStoreAdmin(@RequestBody String body, @RequestHeader Map<String, String> headers) {
-        return webClient.post()
-                .uri("/api/v1/stores/admin")
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .body(BodyInserters.fromValue(body))
-                .exchangeToMono(response -> response.toEntity(String.class));
+    public Mono<ResponseEntity<String>> createStoreAdmin(@RequestBody String body) {
+        return Mono.fromCallable(() -> {
+            String json = storeGrpcClient.createStoreAdmin(body);
+            return ResponseEntity.status(201).header("Content-Type", "application/json").body(json);
+        });
     }
 
     @PutMapping("/admin/{storeId}")
-    public Mono<ResponseEntity<String>> updateStoreAdmin(@PathVariable String storeId, @RequestBody String body, @RequestHeader Map<String, String> headers) {
-        return webClient.put()
-                .uri("/api/v1/stores/admin/{id}", storeId)
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .body(BodyInserters.fromValue(body))
-                .exchangeToMono(response -> response.toEntity(String.class));
+    public Mono<ResponseEntity<String>> updateStoreAdmin(@PathVariable String storeId, @RequestBody String body) {
+        return Mono.fromCallable(() -> {
+            String json = storeGrpcClient.updateStoreAdmin(storeId, body);
+            return ResponseEntity.ok().header("Content-Type", "application/json").body(json);
+        });
     }
 
     @DeleteMapping("/admin/{storeId}")
-    public Mono<ResponseEntity<String>> deleteStoreAdmin(@PathVariable String storeId, @RequestHeader Map<String, String> headers) {
-        return webClient.delete()
-                .uri("/api/v1/stores/admin/{id}", storeId)
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
+    public Mono<ResponseEntity<Void>> deleteStoreAdmin(@PathVariable String storeId) {
+        return Mono.fromCallable(() -> {
+            storeGrpcClient.deleteStoreAdmin(storeId);
+            return ResponseEntity.noContent().build();
+        });
     }
 
-    // Previously this was mapped to /market and proxied to marketplace /api/v1/stores/market.
-    // Keep the /market route available but forward it to the new marketplace root for backwards compatibility.
     @GetMapping("/market")
-    public Mono<ResponseEntity<String>> getMarketStoresAlias(@RequestHeader Map<String, String> headers, @RequestParam(value = "q", required = false) String q,
+    public Mono<ResponseEntity<String>> getMarketStoresAlias(ServerWebExchange exchange, 
+                                                             @RequestParam(value = "q", required = false) String q,
                                                              @RequestParam(defaultValue = "1") int page,
                                                              @RequestParam(defaultValue = "10") int pageSize) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/v1/stores").queryParamIfPresent("q", java.util.Optional.ofNullable(q)).queryParam("page", page).queryParam("pageSize", pageSize).build())
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
+        return getMarketStores(exchange, q, page, pageSize);
     }
 
     @PostMapping("/{storeId}/favorite")
-    public Mono<ResponseEntity<String>> toggleFavorite(@PathVariable String storeId, @RequestHeader Map<String, String> headers) {
-        return webClient.post()
-                .uri("/api/v1/stores/{id}/favorite", storeId)
-                .headers(h -> copyRelevantHeaders(h, headers))
-                .exchangeToMono(response -> response.toEntity(String.class));
+    public Mono<ResponseEntity<String>> toggleFavorite(@PathVariable String storeId, ServerWebExchange exchange) {
+        return extractUserId(exchange)
+                .map(userId -> {
+                    storeGrpcClient.toggleFavorite(storeId, userId);
+                    return ResponseEntity.ok().body("{\"success\":true}");
+                });
     }
 
-    private void copyRelevantHeaders(org.springframework.http.HttpHeaders target, Map<String, String> headers) {
-        // Copy Authorization and other non-sensitive user headers so marketplace receives identity.
-        if (headers.containsKey("authorization")) {
-            target.set(HttpHeaders.AUTHORIZATION, headers.get("authorization"));
+    private Mono<Long> extractUserId(ServerWebExchange exchange) {
+        String token = RequestUtils.extractToken(exchange);
+        if (token == null || token.isBlank()) {
+            return Mono.just(0L); // Anonymous
         }
-        // Do NOT forward X-User-Id header anymore; marketplace should extract user id from the JWT Authorization header.
-        // Do not forward X-User-Id under any circumstances.
-        if (headers.containsKey("x-user-email")) {
-            target.set("X-User-Email", headers.get("x-user-email"));
-        }
-        if (headers.containsKey("x-user-roles")) {
-            target.set("X-User-Roles", headers.get("x-user-roles"));
-        }
+        return jwtProcessor.validateTokenForGateway(token)
+                .map(validation -> {
+                    if (validation.valid && validation.userId != null) {
+                        return validation.userId;
+                    }
+                    return 0L;
+                })
+                .onErrorReturn(0L);
     }
 }

@@ -37,6 +37,9 @@ spring:
             read-timeout: ${FEIGN_READ_TIMEOUT:10000}
             logger-level: BASIC
     gateway:
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 8s
       routes:
         - id: identity-service
           uri: http://identity-service:8080
