@@ -56,10 +56,10 @@ spring:
           filters:
             - StripPrefix=0
 
-        - id: marketplace-service
-          uri: http://marketplace-service:8080
+        - id: catalog-service
+          uri: http://catalog-service:8080
           predicates:
-            - Path=/api/v1/marketplace/**,/api/v1/stores/**,/api/v1/gyms/**,/api/v1/categories/**,/api/v1/checkout/**,/api/v1/admin/stores/**,/api/v1/admin/gyms/**,/api/v1/admin/categories/**
+            - Path=/api/v1/catalog/**,/api/v1/stores/**,/api/v1/gyms/**,/api/v1/categories/**,/api/v1/checkout/**,/api/v1/admin/stores/**,/api/v1/admin/gyms/**,/api/v1/admin/categories/**
           filters:
             - StripPrefix=0
 
@@ -134,10 +134,10 @@ spring:
           metadata:
             response-timeout: 15000
 
-        - id: marketplace-service-openapi
-          uri: http://marketplace-service:8080
+        - id: catalog-service-openapi
+          uri: http://catalog-service:8080
           predicates:
-            - Path=/v3/api-docs/marketplace-service
+            - Path=/v3/api-docs/catalog-service
           filters:
             - SetPath=/v3/api-docs
             - name: Retry
@@ -322,8 +322,8 @@ springdoc:
     urls:
       - url: /v3/api-docs/identity-service
         name: identity-service
-      - url: /v3/api-docs/marketplace-service
-        name: marketplace-service
+      - url: /v3/api-docs/catalog-service
+        name: catalog-service
       - url: /v3/api-docs/notifications-service
         name: notifications-service
       - url: /v3/api-docs/payment-service
@@ -345,6 +345,6 @@ logging:
 
 grpc:
   client:
-    marketplace-service:
-      address: 'dns:///marketplace-service.fitnest-dev.svc.cluster.local:9090'
+    catalog-service:
+      address: 'dns:///catalog-service.fitnest-dev.svc.cluster.local:9090'
       negotiation-type: plaintext
