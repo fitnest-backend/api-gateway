@@ -30,7 +30,7 @@ public class CsrfValidator {
                 String requestCsrfToken = exchange.getRequest().getHeaders().getFirst("X-CSRF-Token");
 
                 if (requestCsrfToken == null || !requestCsrfToken.equals(cookieCsrfToken)) {
-                    return ResponseUtils.respondWithForbidden(exchange.getResponse());
+                    return ResponseUtils.respondWithForbidden(exchange);
                 }
             }
 

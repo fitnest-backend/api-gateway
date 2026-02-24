@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -27,7 +27,7 @@ public class ApiError {
         private int status;
         private String path;
         @Builder.Default
-        private LocalDateTime timestamp = LocalDateTime.now();
+        private OffsetDateTime timestamp = OffsetDateTime.now();
         private List<FieldIssue> details;
     }
 

@@ -49,17 +49,21 @@ public class ResponseUtils {
         }
     }
 
-    public static Mono<Void> respondWithForbidden(ServerHttpResponse response) {
+    public static Mono<Void> respondWithForbidden(org.springframework.web.server.ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.FORBIDDEN);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        Map<String, Object> payload = Map.of(
-                "error", Map.of(
-                        "code", "FORBIDDEN",
-                        "message", "Access is forbidden (possible block or insufficient permissions)"
-                )
-        );
+        
+        ApiError error = ApiError.builder()
+                .error(ApiError.ErrorDetail.builder()
+                        .code("FORBIDDEN")
+                        .message("Access is forbidden (possible block or insufficient permissions)")
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .path(exchange.getRequest().getPath().value())
+                        .build())
+                .build();
         try {
-            String json = OBJECT_MAPPER.writeValueAsString(payload);
+            String json = OBJECT_MAPPER.writeValueAsString(error);
             byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
             return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
         } catch (JsonProcessingException e) {
@@ -67,8 +71,25 @@ public class ResponseUtils {
         }
     }
 
-    public static Mono<Void> respondWithUnauthorized(ServerHttpResponse response) {
+    public static Mono<Void> respondWithUnauthorized(org.springframework.web.server.ServerWebExchange exchange) {
+        ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
-        return response.setComplete();
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
+        
+        ApiError error = ApiError.builder()
+                .error(ApiError.ErrorDetail.builder()
+                        .code("UNAUTHORIZED")
+                        .message("Authentication required")
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .path(exchange.getRequest().getPath().value())
+                        .build())
+                .build();
+        try {
+            String json = OBJECT_MAPPER.writeValueAsString(error);
+            byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+            return response.writeWith(Mono.just(response.bufferFactory().wrap(bytes)));
+        } catch (JsonProcessingException e) {
+            return response.setComplete();
+        }
     }
 }

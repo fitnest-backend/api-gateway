@@ -41,7 +41,7 @@ public class AuthFilterConfig {
             String path = sanitizedExchange.getRequest().getPath().value();
 
             if (path.contains("/internal/")) {
-                return ResponseUtils.respondWithForbidden(sanitizedExchange.getResponse());
+                return ResponseUtils.respondWithForbidden(sanitizedExchange);
             }
 
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
@@ -101,7 +101,7 @@ public class AuthFilterConfig {
     private Mono<Void> handleAuthFailure(ServerWebExchange exchange, String clientIP, String path) {
         Mono<Void> recordMono = path.equals("/api/v1/auth/verify-otp") ?
             Mono.empty() : blockManager.recordFailedAttempt(clientIP, null).then();
-        return recordMono.then(ResponseUtils.respondWithUnauthorized(exchange.getResponse()));
+        return recordMono.then(ResponseUtils.respondWithUnauthorized(exchange));
     }
 
     private Mono<Void> handleTokenValidation(ServerWebExchange exchange, GatewayFilterChain chain,
@@ -119,7 +119,7 @@ public class AuthFilterConfig {
                 .flatMap(blocked -> {
                     if (blocked) {
                         log.warn("Blocking request from clientIP={} email={} path={}", clientIP, validation.email, path);
-                        return ResponseUtils.respondWithForbidden(exchange.getResponse());
+                        return ResponseUtils.respondWithForbidden(exchange);
                     }
 
                     ServerWebExchange modifiedExchange = addUserHeaders(exchange, validation);
