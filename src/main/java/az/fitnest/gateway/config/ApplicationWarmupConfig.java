@@ -16,12 +16,12 @@ import org.springframework.scheduling.annotation.Async;
 @Configuration
 public class ApplicationWarmupConfig {
 
-    private final ReactiveRedisTemplate<String, Object> redisTemplate;
+    private final ReactiveRedisTemplate<String, String> redisTemplate;
 
     @Value("${app.warmup.enabled:true}")
     private boolean warmupEnabled;
 
-    public ApplicationWarmupConfig(ReactiveRedisTemplate<String, Object> redisTemplate) {
+    public ApplicationWarmupConfig(ReactiveRedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
