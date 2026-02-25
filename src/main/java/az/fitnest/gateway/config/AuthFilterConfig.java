@@ -90,7 +90,7 @@ public class AuthFilterConfig {
         }
 
         if (token != null && !token.isEmpty()) {
-            return jwtProcessor.validateTokenForGateway(token)
+            return jwtProcessor.validateToken(token)
                     .flatMap(validation -> handleTokenValidation(exchange, chain, validation, requiresAuth, clientIP, path, token));
         }
 

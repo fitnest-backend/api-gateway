@@ -20,12 +20,17 @@ public class JwtProcessor {
     private String secretKey;
 
     private final ReactiveRedisTemplate<String, String> redisTemplate;
+    private final String sessionPrefix;
 
     private Key signingKey;
     private io.jsonwebtoken.JwtParser jwtParser;
 
-    public JwtProcessor(ReactiveRedisTemplate<String, String> redisTemplate) {
+    public JwtProcessor(
+            ReactiveRedisTemplate<String, String> redisTemplate,
+            @Value("${security.redis.session-prefix:auth:user:session:}") String sessionPrefix
+    ) {
         this.redisTemplate = redisTemplate;
+        this.sessionPrefix = sessionPrefix;
     }
 
     @PostConstruct
@@ -41,14 +46,14 @@ public class JwtProcessor {
     }
 
     public Mono<TokenValidationResult> validateTokenForGateway(String token) {
-        return validateTokenInternal(token, false);
+        return validateTokenInternal(token, false, false);
     }
 
     public Mono<TokenValidationResult> validateToken(String token) {
-        return validateTokenInternal(token, true);
+        return validateTokenInternal(token, true, true);
     }
 
-    private Mono<TokenValidationResult> validateTokenInternal(String token, boolean checkBlacklist) {
+    private Mono<TokenValidationResult> validateTokenInternal(String token, boolean checkBlacklist, boolean checkSession) {
         if (token == null || token.isEmpty()) {
             return Mono.just(new TokenValidationResult(false, null, null, null, null));
         }
@@ -84,12 +89,19 @@ public class JwtProcessor {
             if (checkBlacklist && jti != null) {
                 String blacklistKey = "blacklist:jti:" + jti;
                 return redisTemplate.hasKey(blacklistKey)
-                        .map(isBlacklisted -> {
+                        .flatMap(isBlacklisted -> {
                             if (Boolean.TRUE.equals(isBlacklisted)) {
-                                return new TokenValidationResult(false, null, null, null, null);
+                                return Mono.just(new TokenValidationResult(false, null, null, null, null));
                             }
-                            return new TokenValidationResult(true, email, userId, roles, jti);
+                            if (checkSession && userId != null && jti != null) {
+                                return validateSession(userId, jti, email, roles);
+                            }
+                            return Mono.just(new TokenValidationResult(true, email, userId, roles, jti));
                         });
+            }
+
+            if (checkSession && userId != null && jti != null) {
+                return validateSession(userId, jti, email, roles);
             }
 
             return Mono.just(new TokenValidationResult(true, email, userId, roles, jti));
@@ -97,6 +109,18 @@ public class JwtProcessor {
         } catch (Exception e) {
             return Mono.just(new TokenValidationResult(false, null, null, null, null));
         }
+    }
+
+    private Mono<TokenValidationResult> validateSession(Long userId, String jti, String email, List<String> roles) {
+        String sessionKey = sessionPrefix + userId;
+        return redisTemplate.opsForValue().get(sessionKey)
+                .map(activeJti -> {
+                    if (jti.equals(activeJti)) {
+                        return new TokenValidationResult(true, email, userId, roles, jti);
+                    }
+                    return new TokenValidationResult(false, null, null, null, null);
+                })
+                .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null));
     }
 
     public boolean isAdminRoute(String path) {
