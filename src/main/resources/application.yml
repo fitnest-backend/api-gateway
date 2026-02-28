@@ -67,7 +67,7 @@ spring:
         - id: notifications-service
           uri: http://notifications-service:8080
           predicates:
-            - Path=/api/v1/notifications/**,/api/v1/sms/**
+            - Path=/api/v1/notifications/**,/api/v1/sms/**,/api/v1/devices/**
           filters:
             - StripPrefix=0
 
