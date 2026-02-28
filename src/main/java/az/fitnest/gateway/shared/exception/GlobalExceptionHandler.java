@@ -24,12 +24,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.internalServerError("An unexpected error occurred in the API Gateway", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.internalServerError("API Gateway-də gözlənilməz xəta baş verdi", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ServerWebInputException.class)
     public ResponseEntity<ApiError> handleServerWebInputException(ServerWebInputException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest("Invalid request format", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest("Yanlış sorğu formatı", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -39,38 +39,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<ApiError> handleConnectException(ConnectException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("The requested service is currently unavailable. Please try again later.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmət hazırda əlçatan deyil. Zəhmət olmasa bir az sonra yenidən yoxlayın.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(UnknownHostException.class)
     public ResponseEntity<ApiError> handleUnknownHostException(UnknownHostException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("Failed to resolve the requested service. It may be down or unaccessible.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmət tapılmadı. Ola bilsin ki, xidmət sönülüdür və ya daxil olmaq mümkün deyil.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(TimeoutException.class)
     public ResponseEntity<ApiError> handleTimeoutException(TimeoutException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.gatewayTimeout("The request timed out while waiting for the service to respond.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.gatewayTimeout("Xidmətin cavabı gözlənilərkən vaxt bitdi.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientRequestException.class)
     public ResponseEntity<ApiError> handleWebClientRequestException(WebClientRequestException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("Unable to connect to the requested service. Please try again later.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmətə qoşulmaq mümkün olmadı. Zəhmət olmasa bir az sonra yenidən yoxlayın.", exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
         if (ex.getStatusCode().is5xxServerError()) {
-            return ErrorResponseBuilder.serviceUnavailable("The service is experiencing issues. Please try again later.", path);
+            return ErrorResponseBuilder.serviceUnavailable("Xidmətdə problem yarandı. Zəhmət olmasa bir az sonra yenidən yoxlayın.", path);
         } else if (ex.getStatusCode().is4xxClientError()) {
             return ErrorResponseBuilder.badRequest(ex.getStatusText() + ": " + ex.getMessage(), path);
         }
-        return ErrorResponseBuilder.internalServerError("Service communication error", path);
+        return ErrorResponseBuilder.internalServerError("Xidmət rabitə xətası", path);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest("The requested service or resource was not found.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest("Sorğu edilən xidmət və ya resurs tapılmadı.", exchange.getRequest().getPath().value());
     }
 
     // Suspicious path patterns that indicate security scans or attacks
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
             //logger.debug("No static resource found for path: {}", path);
         }
         
-        return ErrorResponseBuilder.notFound("The requested resource was not found.", path);
+        return ErrorResponseBuilder.notFound("Sorğu edilən resurs tapılmadı.", path);
     }
 
     /**
@@ -120,12 +120,12 @@ public class GlobalExceptionHandler {
         
         if (status == HttpStatus.NOT_FOUND) {
             //logger.debug("Resource not found: {}", path);
-            return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resource not found", path);
+            return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resurs tapılmadı", path);
         } else if (status.is4xxClientError()) {
-            return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Bad request", path);
+            return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Yanlış sorğu", path);
         } else {
             //logger.error("ResponseStatusException with status {}: {}", status, ex.getMessage());
-            return ErrorResponseBuilder.internalServerError("An error occurred processing your request", path);
+            return ErrorResponseBuilder.internalServerError("Sorğunuz emal edilərkən xəta baş verdi", path);
         }
     }
 
