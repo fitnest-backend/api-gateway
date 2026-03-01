@@ -22,6 +22,16 @@ import org.springframework.web.server.ServerWebExchange;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    // Suspicious path patterns that indicate security scans or attacks
+    private static final Set<String> SUSPICIOUS_PATTERNS = Set.of(
+            ".env", ".git", ".svn", ".htaccess", ".htpasswd",
+            "wp-admin", "wp-login", "wp-content", "wordpress",
+            "admin", "phpmyadmin", "mysql", "sql",
+            "bin/sh", "bin/bash", "etc/passwd", "etc/shadow",
+            "cmd.exe", "powershell", "shell", "cgi-bin",
+            ".aws", ".docker", "config.json", "credentials"
+    );
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex, ServerWebExchange exchange) {
         return ErrorResponseBuilder.internalServerError("API Gateway-də gözlənilməz xəta baş verdi", exchange.getRequest().getPath().value());
@@ -73,16 +83,6 @@ public class GlobalExceptionHandler {
         return ErrorResponseBuilder.badRequest("Sorğu edilən xidmət və ya resurs tapılmadı.", exchange.getRequest().getPath().value());
     }
 
-    // Suspicious path patterns that indicate security scans or attacks
-    private static final Set<String> SUSPICIOUS_PATTERNS = Set.of(
-            ".env", ".git", ".svn", ".htaccess", ".htpasswd",
-            "wp-admin", "wp-login", "wp-content", "wordpress",
-            "admin", "phpmyadmin", "mysql", "sql",
-            "bin/sh", "bin/bash", "etc/passwd", "etc/shadow",
-            "cmd.exe", "powershell", "shell", "cgi-bin",
-            ".aws", ".docker", "config.json", "credentials"
-    );
-
     /**
      * Handles requests for static resources that don't exist.
      * This catches:
@@ -93,7 +93,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiError> handleNoResourceFoundException(NoResourceFoundException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
-        
+
         // Check if this looks like a security scan - log at debug level only
         if (isSuspiciousPath(path)) {
             //logger.debug("Blocked suspicious request to: {}", path);
@@ -106,7 +106,7 @@ public class GlobalExceptionHandler {
         } else {
             //logger.debug("No static resource found for path: {}", path);
         }
-        
+
         return ErrorResponseBuilder.notFound("Sorğu edilən resurs tapılmadı.", path);
     }
 
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleResponseStatusException(ResponseStatusException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
-        
+
         if (status == HttpStatus.NOT_FOUND) {
             //logger.debug("Resource not found: {}", path);
             return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resurs tapılmadı", path);

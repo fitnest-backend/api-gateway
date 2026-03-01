@@ -9,12 +9,11 @@ import java.time.Duration;
 @Component
 public class BlockManager {
 
-    private final ReactiveRedisTemplate<String, String> redisTemplate;
-
     private static final int USER_BLOCK_THRESHOLD = 5;
     private static final int IP_BLOCK_THRESHOLD = 50;
     private static final Duration USER_BLOCK_DURATION = Duration.ofMinutes(15);
     private static final Duration IP_BLOCK_DURATION = Duration.ofHours(1);
+    private final ReactiveRedisTemplate<String, String> redisTemplate;
 
     public BlockManager(ReactiveRedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;

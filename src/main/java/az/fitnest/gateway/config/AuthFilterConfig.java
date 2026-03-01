@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
 import java.util.UUID;
 
 @Configuration
@@ -95,13 +96,13 @@ public class AuthFilterConfig {
 
     private Mono<Void> handleAuthFailure(ServerWebExchange exchange, String clientIP, String path) {
         Mono<Void> recordMono = path.equals("/api/v1/auth/verify-otp") ?
-            Mono.empty() : blockManager.recordFailedAttempt(clientIP, null).then();
+                Mono.empty() : blockManager.recordFailedAttempt(clientIP, null).then();
         return recordMono.then(ResponseUtils.respondWithUnauthorized(exchange));
     }
 
     private Mono<Void> handleTokenValidation(ServerWebExchange exchange, GatewayFilterChain chain,
-                                           JwtProcessor.TokenValidationResult validation, boolean requiresAuth,
-                                           String clientIP, String path, String token) {
+                                             JwtProcessor.TokenValidationResult validation, boolean requiresAuth,
+                                             String clientIP, String path, String token) {
         if (!validation.valid) {
             if (requiresAuth) {
                 return handleAuthFailure(exchange, clientIP, path);

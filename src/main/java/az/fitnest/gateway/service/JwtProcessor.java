@@ -16,12 +16,10 @@ import java.util.UUID;
 @Component
 public class JwtProcessor {
 
-    @Value("${JWT_SECRET:your-jwt-secret-change-in-production}")
-    private String secretKey;
-
     private final ReactiveRedisTemplate<String, String> redisTemplate;
     private final String sessionPrefix;
-
+    @Value("${JWT_SECRET:your-jwt-secret-change-in-production}")
+    private String secretKey;
     private Key signingKey;
     private io.jsonwebtoken.JwtParser jwtParser;
 
@@ -79,12 +77,11 @@ public class JwtProcessor {
             }
             // Final variable for use in lambda
             final Long userId = parsedUserId;
-            
+
             // Email may or may not be present in the token
             final String email = claims.get("email", String.class);
             final String jti = claims.get("jti", String.class);
-            @SuppressWarnings("unchecked")
-            final List<String> roles = claims.get("roles", List.class);
+            @SuppressWarnings("unchecked") final List<String> roles = claims.get("roles", List.class);
 
             if (checkBlacklist && jti != null) {
                 String blacklistKey = "blacklist:jti:" + jti;
@@ -125,7 +122,7 @@ public class JwtProcessor {
 
     public boolean isAdminRoute(String path) {
         return path.startsWith("/api/v1/admin/") &&
-               !path.equals("/api/v1/admin/create-admin");
+                !path.equals("/api/v1/admin/create-admin");
     }
 
     public static class TokenValidationResult {

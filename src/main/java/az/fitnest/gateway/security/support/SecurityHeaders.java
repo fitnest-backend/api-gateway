@@ -15,12 +15,12 @@ public class SecurityHeaders {
         response.getHeaders().add("Permissions-Policy", "geolocation=(), microphone=(), camera()");
         response.getHeaders().add("Content-Security-Policy",
                 "default-src 'self' http: https:; " +
-                "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; " +
-                "style-src 'self' 'unsafe-inline' http: https:; " +
-                "img-src 'self' data: http: https:; " +
-                "font-src 'self' http: https: ws: wss:; " +
-                "connect-src 'self' http: https: ws: wss:; " +
-                "frame-ancestors 'self';");
+                        "script-src 'self' 'unsafe-inline' 'unsafe-eval' http: https:; " +
+                        "style-src 'self' 'unsafe-inline' http: https:; " +
+                        "img-src 'self' data: http: https:; " +
+                        "font-src 'self' http: https: ws: wss:; " +
+                        "connect-src 'self' http: https: ws: wss:; " +
+                        "frame-ancestors 'self';");
         response.getHeaders().add("Server", "");
     }
 }

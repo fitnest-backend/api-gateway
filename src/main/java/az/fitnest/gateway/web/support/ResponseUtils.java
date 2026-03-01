@@ -53,7 +53,7 @@ public class ResponseUtils {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.FORBIDDEN);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        
+
         ApiError error = ApiError.builder()
                 .error(ApiError.ErrorDetail.builder()
                         .code("FORBIDDEN")
@@ -75,7 +75,7 @@ public class ResponseUtils {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        
+
         ApiError error = ApiError.builder()
                 .error(ApiError.ErrorDetail.builder()
                         .code("UNAUTHORIZED")

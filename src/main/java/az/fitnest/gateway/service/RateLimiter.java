@@ -13,29 +13,26 @@ import java.util.Collections;
 @Component
 public class RateLimiter {
 
-    private final ReactiveRedisTemplate<String, String> redisTemplate;
-    private final RateLimitConfig rateLimitConfig;
-
     private static final RedisScript<Long> RATE_LIMIT_SCRIPT = RedisScript.of(
-        "local key = KEYS[1] " +
-        "local limit = tonumber(ARGV[1]) " +
-        "local window = tonumber(ARGV[2]) " +
-        "local current = redis.call('INCR', key) " +
-        "if current == 1 then " +
-        "    redis.call('PEXPIRE', key, window) " +
-        "end " +
-        "if current <= limit then " +
-        "    return current " +
-        "else " +
-        "    return -1 " +
-        "end",
-        Long.class
+            "local key = KEYS[1] " +
+                    "local limit = tonumber(ARGV[1]) " +
+                    "local window = tonumber(ARGV[2]) " +
+                    "local current = redis.call('INCR', key) " +
+                    "if current == 1 then " +
+                    "    redis.call('PEXPIRE', key, window) " +
+                    "end " +
+                    "if current <= limit then " +
+                    "    return current " +
+                    "else " +
+                    "    return -1 " +
+                    "end",
+            Long.class
     );
-
     private static final Duration RATE_WINDOW = Duration.ofMinutes(1);
-
     private static final java.util.regex.Pattern ID_PATTERN = java.util.regex.Pattern.compile("/\\d+");
     private static final java.util.regex.Pattern UUID_PATTERN = java.util.regex.Pattern.compile("/[a-f0-9]{24}");
+    private final ReactiveRedisTemplate<String, String> redisTemplate;
+    private final RateLimitConfig rateLimitConfig;
 
     public RateLimiter(ReactiveRedisTemplate<String, String> redisTemplate, RateLimitConfig rateLimitConfig) {
         this.redisTemplate = redisTemplate;
@@ -58,7 +55,7 @@ public class RateLimiter {
         }
 
         return redisTemplate.execute(RATE_LIMIT_SCRIPT, Collections.singletonList(key),
-                Arrays.asList(String.valueOf(limit), String.valueOf(window)))
+                        Arrays.asList(String.valueOf(limit), String.valueOf(window)))
                 .next()
                 .defaultIfEmpty(0L);
     }

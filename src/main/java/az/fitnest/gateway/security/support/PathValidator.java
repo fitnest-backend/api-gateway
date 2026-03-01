@@ -8,13 +8,13 @@ public class PathValidator {
 
     private static final Set<String> AUTH_REQUIRED_PATHS = Set.of();
 
+    private PathValidator() {
+    }
+
     public static boolean requiresAuthForContent(String path) {
         // Only treat clearly admin or internal content-modifying endpoints as requiring auth.
         // Previously we forced auth for all stores and catalog content — that's stricter than identity.
         return path.contains("/admin/") || path.endsWith("/admin");
-    }
-
-    private PathValidator() {
     }
 
     public static boolean isCsrfExempted(String path) {
@@ -27,16 +27,16 @@ public class PathValidator {
         }
 
         // Global rule: Any path with /admin/ or /me/ (or just /me) requires authentication
-        if (path.contains("/admin/") || path.endsWith("/admin") || 
-            path.startsWith("/api/v1/me") || path.startsWith("/api/v1/internal/")) {
+        if (path.contains("/admin/") || path.endsWith("/admin") ||
+                path.startsWith("/api/v1/me") || path.startsWith("/api/v1/internal/")) {
             return true;
         }
 
         // Specific protected endpoints
         return AUTH_REQUIRED_PATHS.contains(path) ||
-               path.startsWith("/api/v1/media/upload") ||
-               path.startsWith("/api/v1/media/delete") ||
-               path.startsWith("/api/v1/media/move");
+                path.startsWith("/api/v1/media/upload") ||
+                path.startsWith("/api/v1/media/delete") ||
+                path.startsWith("/api/v1/media/move");
     }
 
 

@@ -22,10 +22,10 @@ public class CsrfValidator {
             String cookieCsrfToken = RequestUtils.extractCsrfTokenFromCookies(exchange.getRequest());
 
             if (cookieCsrfToken != null &&
-                (RequestUtils.isStateChangingMethod(method) ||
-                 isAdminPath) &&
-                PathValidator.startsWithApiV1(path) &&
-                !isCsrfExemptedPath) {
+                    (RequestUtils.isStateChangingMethod(method) ||
+                            isAdminPath) &&
+                    PathValidator.startsWithApiV1(path) &&
+                    !isCsrfExemptedPath) {
 
                 String requestCsrfToken = exchange.getRequest().getHeaders().getFirst("X-CSRF-Token");
 
@@ -44,13 +44,13 @@ public class CsrfValidator {
         if (userAgent == null) {
             return false;
         }
-        
+
         String lowerUserAgent = userAgent.toLowerCase();
         return lowerUserAgent.contains("fitnest-mobile") ||
-               lowerUserAgent.contains("okhttp") ||
-               lowerUserAgent.contains("retrofit") ||
-               lowerUserAgent.contains("android") ||
-               lowerUserAgent.contains("ios") ||
-               lowerUserAgent.contains("mobile");
+                lowerUserAgent.contains("okhttp") ||
+                lowerUserAgent.contains("retrofit") ||
+                lowerUserAgent.contains("android") ||
+                lowerUserAgent.contains("ios") ||
+                lowerUserAgent.contains("mobile");
     }
 }
