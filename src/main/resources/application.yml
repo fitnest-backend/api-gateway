@@ -42,228 +42,230 @@ spring:
             read-timeout: ${FEIGN_READ_TIMEOUT:10000}
             logger-level: BASIC
     gateway:
-      httpclient:
-        connect-timeout: 2000
-        response-timeout: 8s
-      routes:
-        - id: identity-service
-          uri: http://identity-service:8080
-          predicates:
-            - Path=/api/v1/auth/**,/api/v1/legal/**,/api/v1/admin/users/**,/api/v1/admin/legal/**,/api/v1/super-admin/users/**
-          filters:
-            - StripPrefix=0
-            - RequestRateLimiter=redisRateLimiter
+      server:
+        webflux:
+          httpclient:
+            connect-timeout: 2000
+            response-timeout: 8s
+          routes:
+            - id: identity-service
+              uri: http://identity-service:8080
+              predicates:
+                - Path=/api/v1/auth/**,/api/v1/legal/**,/api/v1/admin/users/**,/api/v1/admin/legal/**,/api/v1/super-admin/users/**
+              filters:
+                - StripPrefix=0
+                - RequestRateLimiter=redisRateLimiter
 
-        - id: storage-service
-          uri: http://storage-service:8080
-          predicates:
-            - Path=/api/v1/media/**
-          filters:
-            - StripPrefix=0
+            - id: storage-service
+              uri: http://storage-service:8080
+              predicates:
+                - Path=/api/v1/media/**
+              filters:
+                - StripPrefix=0
 
-        - id: catalog-service
-          uri: http://catalog-service:8080
-          predicates:
-            - Path=/api/v1/catalog/**,/api/v1/stores/**,/api/v1/gyms/**,/api/v1/categories/**,/api/v1/checkout/**,/api/v1/admin/stores/**,/api/v1/admin/gyms/**,/api/v1/admin/categories/**,/api/v1/super-admin/**
-          filters:
-            - StripPrefix=0
-
-
-        - id: notifications-service
-          uri: http://notifications-service:8080
-          predicates:
-            - Path=/api/v1/notifications/**,/api/v1/sms/**,/api/v1/devices/**
-          filters:
-            - StripPrefix=0
-
-        - id: payment-service
-          uri: http://payment-service:8080
-          predicates:
-            - Path=/api/v1/payments/**,/api/v1/wallets/**
-          filters:
-            - StripPrefix=0
+            - id: catalog-service
+              uri: http://catalog-service:8080
+              predicates:
+                - Path=/api/v1/catalog/**,/api/v1/stores/**,/api/v1/gyms/**,/api/v1/categories/**,/api/v1/checkout/**,/api/v1/admin/stores/**,/api/v1/admin/gyms/**,/api/v1/admin/categories/**,/api/v1/super-admin/**
+              filters:
+                - StripPrefix=0
 
 
-        - id: support-service
-          uri: http://support-service:8080
-          predicates:
-            - Path=/api/v1/support/**,/api/v1/tickets/**,/api/v1/faqs/**,/api/v1/admin/faqs/**,/api/v1/admin/tickets/**
-          filters:
-            - StripPrefix=0
+            - id: notifications-service
+              uri: http://notifications-service:8080
+              predicates:
+                - Path=/api/v1/notifications/**,/api/v1/sms/**,/api/v1/devices/**
+              filters:
+                - StripPrefix=0
 
-        - id: fitness-plan-service
-          uri: http://fitness-plan-service:8080
-          predicates:
-            - Path=/api/v1/nutrition-plans/**,/api/v1/workout-plans/**
-          filters:
-            - StripPrefix=0
+            - id: payment-service
+              uri: http://payment-service:8080
+              predicates:
+                - Path=/api/v1/payments/**,/api/v1/wallets/**
+              filters:
+                - StripPrefix=0
 
-        - id: argocd
-          uri: http://argocd-server.argocd.svc:8080
-          predicates:
-            - Path=/api/v1/applications/**,/api/v1/stream/applications/**
-          filters:
-            - StripPrefix=0
 
-        - id: user-service
-          uri: http://user-service:8080
-          predicates:
-            - Path=/api/v1/users/**,/api/v1/me,/api/v1/me/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**,/api/v1/admin/goals/**
-          filters:
-            - StripPrefix=0
-            - RequestRateLimiter=redisRateLimiter
+            - id: support-service
+              uri: http://support-service:8080
+              predicates:
+                - Path=/api/v1/support/**,/api/v1/tickets/**,/api/v1/faqs/**,/api/v1/admin/faqs/**,/api/v1/admin/tickets/**
+              filters:
+                - StripPrefix=0
 
-        - id: order-service
-          uri: http://order-service:8080
-          predicates:
-            - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**
-          filters:
-            - StripPrefix=0
+            - id: fitness-plan-service
+              uri: http://fitness-plan-service:8080
+              predicates:
+                - Path=/api/v1/nutrition-plans/**,/api/v1/workout-plans/**
+              filters:
+                - StripPrefix=0
 
-        # OpenAPI doc proxy routes
-        - id: identity-service-openapi
-          uri: http://identity-service:8080
-          predicates:
-            - Path=/v3/api-docs/identity-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: argocd
+              uri: http://argocd-server.argocd.svc:8080
+              predicates:
+                - Path=/api/v1/applications/**,/api/v1/stream/applications/**
+              filters:
+                - StripPrefix=0
 
-        - id: catalog-service-openapi
-          uri: http://catalog-service:8080
-          predicates:
-            - Path=/v3/api-docs/catalog-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: user-service
+              uri: http://user-service:8080
+              predicates:
+                - Path=/api/v1/users/**,/api/v1/me,/api/v1/me/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**,/api/v1/admin/goals/**
+              filters:
+                - StripPrefix=0
+                - RequestRateLimiter=redisRateLimiter
 
-        - id: notifications-service-openapi
-          uri: http://notifications-service:8080
-          predicates:
-            - Path=/v3/api-docs/notifications-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: order-service
+              uri: http://order-service:8080
+              predicates:
+                - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**
+              filters:
+                - StripPrefix=0
 
-        - id: payment-service-openapi
-          uri: http://payment-service:8080
-          predicates:
-            - Path=/v3/api-docs/payment-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            # OpenAPI doc proxy routes
+            - id: identity-service-openapi
+              uri: http://identity-service:8080
+              predicates:
+                - Path=/v3/api-docs/identity-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
 
-        - id: support-service-openapi
-          uri: http://support-service:8080
-          predicates:
-            - Path=/v3/api-docs/support-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: catalog-service-openapi
+              uri: http://catalog-service:8080
+              predicates:
+                - Path=/v3/api-docs/catalog-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
 
-        - id: user-service-openapi
-          uri: http://user-service:8080
-          predicates:
-            - Path=/v3/api-docs/user-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: notifications-service-openapi
+              uri: http://notifications-service:8080
+              predicates:
+                - Path=/v3/api-docs/notifications-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
 
-        - id: fitness-plan-service-openapi
-          uri: http://fitness-plan-service:8080
-          predicates:
-            - Path=/v3/api-docs/fitness-plan-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: payment-service-openapi
+              uri: http://payment-service:8080
+              predicates:
+                - Path=/v3/api-docs/payment-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
 
-        - id: order-service-openapi
-          uri: http://order-service:8080
-          predicates:
-            - Path=/v3/api-docs/order-service
-          filters:
-            - SetPath=/v3/api-docs
-            - name: Retry
-              args:
-                retries: 2
-                statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
-                methods: GET
-                backoff:
-                  firstBackoff: 500ms
-                  maxBackoff: 2000ms
-                  factor: 2
-          metadata:
-            response-timeout: 15000
+            - id: support-service-openapi
+              uri: http://support-service:8080
+              predicates:
+                - Path=/v3/api-docs/support-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
+
+            - id: user-service-openapi
+              uri: http://user-service:8080
+              predicates:
+                - Path=/v3/api-docs/user-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
+
+            - id: fitness-plan-service-openapi
+              uri: http://fitness-plan-service:8080
+              predicates:
+                - Path=/v3/api-docs/fitness-plan-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
+
+            - id: order-service-openapi
+              uri: http://order-service:8080
+              predicates:
+                - Path=/v3/api-docs/order-service
+              filters:
+                - SetPath=/v3/api-docs
+                - name: Retry
+                  args:
+                    retries: 2
+                    statuses: INTERNAL_SERVER_ERROR,BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
+                    methods: GET
+                    backoff:
+                      firstBackoff: 500ms
+                      maxBackoff: 2000ms
+                      factor: 2
+              metadata:
+                response-timeout: 15000
 
 
 # Removed Eureka configuration as it conflicts with Kubernetes/Istio DNS
@@ -307,9 +309,9 @@ management:
     health:
       probes:
         enabled: true
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
   tracing:
     sampling:
