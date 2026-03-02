@@ -1,42 +1,28 @@
 package az.fitnest.gateway.shared.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ApiError {
+public record ApiError(
     @JsonProperty("error")
-    private ErrorDetail error;
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
+    ErrorDetail error
+) {
     @Builder
-    public static class ErrorDetail {
-        private String code;
-        private String message;
-        private int status;
-        private String path;
-        @Builder.Default
-        private OffsetDateTime timestamp = OffsetDateTime.now();
-        private List<FieldIssue> details;
-    }
+    public record ErrorDetail(
+        String code,
+        String message,
+        int status,
+        String path,
+        OffsetDateTime timestamp,
+        List<FieldIssue> details
+    ) {}
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Builder
-    public static class FieldIssue {
-        private String field;
-        private String issue;
-    }
+    public record FieldIssue(
+        String field,
+        String issue
+    ) {}
 }

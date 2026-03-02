@@ -96,15 +96,15 @@ public class GlobalExceptionHandler {
 
         // Check if this looks like a security scan - log at debug level only
         if (isSuspiciousPath(path)) {
-            //logger.debug("Blocked suspicious request to: {}", path);
+            //
         } else if (path.equals("/") || path.equals("")) {
             // Root path request - common from health checks or misconfigured clients
-            //logger.debug("Root path request received - no handler configured for /");
+            //
         } else if (path.startsWith("/api/")) {
             // This is an API path that doesn't match any route - worth noting
-            //logger.warn("No route configured for API path: {}", path);
+            //
         } else {
-            //logger.debug("No static resource found for path: {}", path);
+            //
         }
 
         return ErrorResponseBuilder.notFound("Sorğu edilən resurs tapılmadı.", path);
@@ -119,12 +119,12 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
 
         if (status == HttpStatus.NOT_FOUND) {
-            //logger.debug("Resource not found: {}", path);
+            //
             return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resurs tapılmadı", path);
         } else if (status.is4xxClientError()) {
             return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Yanlış sorğu", path);
         } else {
-            //logger.error("ResponseStatusException with status {}: {}", status, ex.getMessage());
+            //
             return ErrorResponseBuilder.internalServerError("Sorğunuz emal edilərkən xəta baş verdi", path);
         }
     }

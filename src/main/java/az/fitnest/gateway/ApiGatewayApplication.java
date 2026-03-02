@@ -2,13 +2,11 @@ package az.fitnest.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication(exclude = {
-        DispatcherServletAutoConfiguration.class,
-        ServletWebServerFactoryAutoConfiguration.class
+@SpringBootApplication(excludeName = {
+    "org.springframework.cloud.autoconfigure.LifecycleMvcEndpointAutoConfiguration",
+    "org.springframework.cloud.autoconfigure.RefreshAutoConfiguration"
 })
 @EnableDiscoveryClient
 public class ApiGatewayApplication {
