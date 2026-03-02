@@ -9,6 +9,8 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +35,9 @@ public class JwtProcessor {
 
     @PostConstruct
     public void init() {
-        this.signingKey = Keys.hmacShaKeyFor(secretKey.getBytes());
-        this.jwtParser = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.jwtParser = Jwts.parser()
+                .verifyWith(key)
                 .build();
     }
 
@@ -57,7 +59,7 @@ public class JwtProcessor {
         }
 
         try {
-            Claims claims = jwtParser.parseClaimsJws(token).getBody();
+            Claims claims = jwtParser.parseSignedClaims(token).getPayload();
 
             if (claims.getExpiration() != null && claims.getExpiration().before(new java.util.Date())) {
                 return Mono.just(new TokenValidationResult(false, null, null, null, null));
