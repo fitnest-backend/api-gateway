@@ -27,9 +27,6 @@ spring:
       timeout: ${SPRING_DATA_REDIS_TIMEOUT:${REDIS_TIMEOUT:2000ms}}
   
   cloud:
-    discovery:
-      simple:
-        enabled: false
     openfeign:
       httpclient:
         hc5:
