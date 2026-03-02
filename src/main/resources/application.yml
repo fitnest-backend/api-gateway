@@ -22,11 +22,14 @@ spring:
     lazy-initialization: ${SPRING_MAIN_LAZY_INITIALIZATION:false}
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:${REDIS_HOST:redis}}
-      port: ${SPRING_REDIS_PORT:${REDIS_PORT:6379}}
-      timeout: ${SPRING_REDIS_TIMEOUT:${REDIS_TIMEOUT:2000ms}}
+      host: ${SPRING_DATA_REDIS_HOST:${REDIS_HOST:redis}}
+      port: ${SPRING_DATA_REDIS_PORT:${REDIS_PORT:6379}}
+      timeout: ${SPRING_DATA_REDIS_TIMEOUT:${REDIS_TIMEOUT:2000ms}}
   
   cloud:
+    discovery:
+      simple:
+        enabled: false
     openfeign:
       httpclient:
         hc5:
