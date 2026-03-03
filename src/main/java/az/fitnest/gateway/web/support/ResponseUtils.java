@@ -32,12 +32,11 @@ public class ResponseUtils {
         response.getHeaders().add("Retry-After", "60");
 
         ApiError error = ApiError.builder()
-                .error(ApiError.ErrorDetail.builder()
-                        .code("TOO_MANY_REQUESTS")
-                        .message("Rate limit exceeded. Please wait 1 minute before making another request.")
-                        .status(HttpStatus.TOO_MANY_REQUESTS.value())
-                        .path(exchange.getRequest().getPath().value())
-                        .build())
+                .code("TOO_MANY_REQUESTS")
+                .message("Rate limit exceeded. Please wait 1 minute before making another request.")
+                .status(HttpStatus.TOO_MANY_REQUESTS.value())
+                .path(exchange.getRequest().getPath().value())
+                .timestamp(java.time.OffsetDateTime.now())
                 .build();
 
         try {
@@ -55,12 +54,11 @@ public class ResponseUtils {
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ApiError error = ApiError.builder()
-                .error(ApiError.ErrorDetail.builder()
-                        .code("FORBIDDEN")
-                        .message("Access is forbidden (possible block or insufficient permissions)")
-                        .status(HttpStatus.FORBIDDEN.value())
-                        .path(exchange.getRequest().getPath().value())
-                        .build())
+                .code("FORBIDDEN")
+                .message("Access is forbidden (possible block or insufficient permissions)")
+                .status(HttpStatus.FORBIDDEN.value())
+                .path(exchange.getRequest().getPath().value())
+                .timestamp(java.time.OffsetDateTime.now())
                 .build();
         try {
             String json = OBJECT_MAPPER.writeValueAsString(error);
@@ -77,12 +75,11 @@ public class ResponseUtils {
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ApiError error = ApiError.builder()
-                .error(ApiError.ErrorDetail.builder()
-                        .code("UNAUTHORIZED")
-                        .message("Authentication required")
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .path(exchange.getRequest().getPath().value())
-                        .build())
+                .code("UNAUTHORIZED")
+                .message("Authentication required")
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .path(exchange.getRequest().getPath().value())
+                .timestamp(java.time.OffsetDateTime.now())
                 .build();
         try {
             String json = OBJECT_MAPPER.writeValueAsString(error);
