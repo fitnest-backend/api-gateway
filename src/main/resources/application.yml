@@ -318,6 +318,7 @@ management:
       probability: 1.0
 
 springdoc:
+  pre-loading-enabled: true
   swagger-ui:
     use-root-path-mapping: true
     doc-expansion: none
