@@ -14,13 +14,20 @@ import org.springframework.web.server.ServerWebInputException;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import org.springframework.context.MessageSource;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
-
 import org.springframework.web.server.ServerWebExchange;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final MessageSource messageSource;
+
+    public GlobalExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
 
     private static final Set<String> SUSPICIOUS_PATTERNS = Set.of(
             ".env", ".git", ".svn", ".htaccess", ".htpasswd",
@@ -33,53 +40,53 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.internalServerError("API Gateway-də gözlənilməz xəta baş verdi", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.internalServerError(getMessage("error.gateway_unexpected", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ServerWebInputException.class)
     public ResponseEntity<ApiError> handleServerWebInputException(ServerWebInputException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest("Yanlış sorğu formatı", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest(getMessage("error.invalid_json_format", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest(ex.getMessage(), exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest(safeMessage(ex.getMessage(), exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ConnectException.class)
     public ResponseEntity<ApiError> handleConnectException(ConnectException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmət hazırda əlçatan deyil. Zəhmət olmasa bir az sonra yenidən yoxlayın.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable(getMessage("error.service_unavailable", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(UnknownHostException.class)
     public ResponseEntity<ApiError> handleUnknownHostException(UnknownHostException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmət tapılmadı. Ola bilsin ki, xidmət sönülüdür və ya daxil olmaq mümkün deyil.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable(getMessage("error.service_not_found", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(TimeoutException.class)
     public ResponseEntity<ApiError> handleTimeoutException(TimeoutException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.gatewayTimeout("Xidmətin cavabı gözlənilərkən vaxt bitdi.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.gatewayTimeout(getMessage("error.gateway_timeout", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientRequestException.class)
     public ResponseEntity<ApiError> handleWebClientRequestException(WebClientRequestException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.serviceUnavailable("Sorğu edilən xidmətə qoşulmaq mümkün olmadı. Zəhmət olmasa bir az sonra yenidən yoxlayın.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.serviceUnavailable(getMessage("error.connection_failed", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(WebClientResponseException.class)
     public ResponseEntity<ApiError> handleWebClientResponseException(WebClientResponseException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
         if (ex.getStatusCode().is5xxServerError()) {
-            return ErrorResponseBuilder.serviceUnavailable("Xidmətdə problem yarandı. Zəhmət olmasa bir az sonra yenidən yoxlayın.", path);
+            return ErrorResponseBuilder.serviceUnavailable(getMessage("error.service_problem", exchange), path);
         } else if (ex.getStatusCode().is4xxClientError()) {
-            return ErrorResponseBuilder.badRequest(ex.getStatusText() + ": " + ex.getMessage(), path);
+            return ErrorResponseBuilder.badRequest(getMessage("error.bad_request", exchange), path);
         }
-        return ErrorResponseBuilder.internalServerError("Xidmət rabitə xətası", path);
+        return ErrorResponseBuilder.internalServerError(getMessage("error.communication_error", exchange), path);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ApiError> handleNotFoundException(NotFoundException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest("Sorğu edilən xidmət və ya resurs tapılmadı.", exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest(getMessage("error.resource_not_found", exchange), exchange.getRequest().getPath().value());
     }
 
 
@@ -96,7 +103,7 @@ public class GlobalExceptionHandler {
 
         }
 
-        return ErrorResponseBuilder.notFound("Sorğu edilən resurs tapılmadı.", path);
+        return ErrorResponseBuilder.notFound(getMessage("error.not_found", exchange), path);
     }
 
 
@@ -106,13 +113,35 @@ public class GlobalExceptionHandler {
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
 
         if (status == HttpStatus.NOT_FOUND) {
-            return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resurs tapılmadı", path);
+            return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : getMessage("error.not_found", exchange), path);
         } else if (status.is4xxClientError()) {
-            return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Yanlış sorğu", path);
+            return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : getMessage("error.bad_request", exchange), path);
         } else {
 
-            return ErrorResponseBuilder.internalServerError("Sorğunuz emal edilərkən xəta baş verdi", path);
+            return ErrorResponseBuilder.internalServerError(getMessage("error.generic_request_error", exchange), path);
         }
+    }
+
+    private String getMessage(String code, ServerWebExchange exchange) {
+        try {
+            Locale locale = exchange.getLocaleContext().getLocale();
+            return messageSource.getMessage(code, null, locale != null ? locale : Locale.ENGLISH);
+        } catch (Exception e) {
+            return code;
+        }
+    }
+
+    private String safeMessage(String msg, ServerWebExchange exchange) {
+        if (msg == null || msg.isBlank()) {
+            return getMessage("error.gateway_unexpected", exchange);
+        }
+        if (msg.startsWith("error.")) {
+            String resolved = getMessage(msg, exchange);
+            if (!resolved.equals(msg)) {
+                return resolved;
+            }
+        }
+        return msg;
     }
 
     private boolean isSuspiciousPath(String path) {

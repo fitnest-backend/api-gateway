@@ -11,12 +11,11 @@ public class ErrorResponseBuilder {
 
     public static ResponseEntity<ApiError> buildError(HttpStatus status, String code, String message, String path) {
         ApiError error = ApiError.builder()
-                .error(ApiError.ErrorDetail.builder()
-                        .code(code)
-                        .message(message)
-                        .status(status.value())
-                        .path(path)
-                        .build())
+                .code(code)
+                .message(message)
+                .status(status.value())
+                .path(path)
+                .timestamp(java.time.OffsetDateTime.now())
                 .build();
 
         return ResponseEntity.status(status).body(error);
@@ -24,12 +23,11 @@ public class ErrorResponseBuilder {
 
     public static ResponseEntity<ApiError> buildErrorWithRetryAfter(HttpStatus status, String code, String message, String retryAfter, String path) {
         ApiError error = ApiError.builder()
-                .error(ApiError.ErrorDetail.builder()
-                        .code(code)
-                        .message(message)
-                        .status(status.value())
-                        .path(path)
-                        .build())
+                .code(code)
+                .message(message)
+                .status(status.value())
+                .path(path)
+                .timestamp(java.time.OffsetDateTime.now())
                 .build();
 
         return ResponseEntity.status(status)
