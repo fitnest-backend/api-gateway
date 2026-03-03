@@ -22,7 +22,7 @@ public class CorsConfig {
         allowedOrigins.add("http://localhost:3000");
         allowedOrigins.add("http://127.0.0.1:3000");
         allowedOrigins.add("http://161.97.183.7");
-        allowedOrigins.add("http://161.*"); // Allow all IPs starting with 161. in dev
+        allowedOrigins.add("http://161.*");
 
         String environment = System.getenv("SPRING_PROFILES_ACTIVE");
         if ("dev".equals(environment) || "development".equals(environment)) {

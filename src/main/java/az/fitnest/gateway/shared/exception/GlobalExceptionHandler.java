@@ -22,7 +22,6 @@ import org.springframework.web.server.ServerWebExchange;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Suspicious path patterns that indicate security scans or attacks
     private static final Set<String> SUSPICIOUS_PATTERNS = Set.of(
             ".env", ".git", ".svn", ".htaccess", ".htpasswd",
             "wp-admin", "wp-login", "wp-content", "wordpress",
@@ -83,48 +82,35 @@ public class GlobalExceptionHandler {
         return ErrorResponseBuilder.badRequest("Sorğu edilən xidmət və ya resurs tapılmadı.", exchange.getRequest().getPath().value());
     }
 
-    /**
-     * Handles requests for static resources that don't exist.
-     * This catches:
-     * 1. Root path requests (/)
-     * 2. Security scan attempts (/.env, /bin/sh, etc.)
-     * 3. Any other unmatched paths that fall through to the static resource handler
-     */
+
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ApiError> handleNoResourceFoundException(NoResourceFoundException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
 
-        // Check if this looks like a security scan - log at debug level only
         if (isSuspiciousPath(path)) {
-            //
         } else if (path.equals("/") || path.equals("")) {
-            // Root path request - common from health checks or misconfigured clients
-            //
+
         } else if (path.startsWith("/api/")) {
-            // This is an API path that doesn't match any route - worth noting
-            //
+
         } else {
-            //
+
         }
 
         return ErrorResponseBuilder.notFound("Sorğu edilən resurs tapılmadı.", path);
     }
 
-    /**
-     * Handles ResponseStatusException which can be thrown for various HTTP status scenarios.
-     */
+
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ApiError> handleResponseStatusException(ResponseStatusException ex, ServerWebExchange exchange) {
         String path = exchange.getRequest().getPath().value();
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
 
         if (status == HttpStatus.NOT_FOUND) {
-            //
             return ErrorResponseBuilder.notFound(ex.getReason() != null ? ex.getReason() : "Resurs tapılmadı", path);
         } else if (status.is4xxClientError()) {
             return ErrorResponseBuilder.badRequest(ex.getReason() != null ? ex.getReason() : "Yanlış sorğu", path);
         } else {
-            //
+
             return ErrorResponseBuilder.internalServerError("Sorğunuz emal edilərkən xəta baş verdi", path);
         }
     }

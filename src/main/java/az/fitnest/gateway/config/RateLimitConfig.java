@@ -14,14 +14,12 @@ public class RateLimitConfig {
     private Map<String, Integer> limits = new HashMap<>();
 
     public RateLimitConfig() {
-        // Auth-specific limits (per minute)
         limits.put("auth.login.post", 5);
         limits.put("auth.verify-otp.post", 5);
         limits.put("auth.request-otp.post", 3);
         limits.put("auth.send-reset-password-link.post", 2);
         limits.put("auth.reset-password.post", 5);
 
-        // Generic limits
         limits.put("general.write", 60);
         limits.put("general.read", 300);
     }
@@ -46,7 +44,6 @@ public class RateLimitConfig {
         boolean isRead = "GET".equals(method);
         boolean isWrite = Arrays.asList("POST", "PUT", "DELETE", "PATCH").contains(method);
 
-        // Auth logic
         if (path.startsWith("/api/v1/auth/login") && isWrite) {
             return "auth.login.post";
         } else if (path.startsWith("/api/v1/auth/otp/send") && isWrite) {

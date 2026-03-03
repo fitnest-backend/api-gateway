@@ -80,7 +80,6 @@ public class AuthFilterConfig {
         boolean requiresAuth = PathValidator.requiresAuth(path);
         boolean isStateChanging = RequestUtils.isStateChangingMethod(method);
 
-        // Enforce authentication for all endpoints that require auth.
         if (requiresAuth && (token == null || token.isEmpty())) {
             return handleAuthFailure(exchange, clientIP, path);
         }
@@ -90,7 +89,6 @@ public class AuthFilterConfig {
                     .flatMap(validation -> handleTokenValidation(exchange, chain, validation, requiresAuth, clientIP, path, token));
         }
 
-        // If no token, we still want to add normalized headers for public calls
         return chain.filter(addAnonymousHeaders(exchange));
     }
 
@@ -128,7 +126,7 @@ public class AuthFilterConfig {
                 .request(exchange.getRequest().mutate()
                         .header("X-Request-Id", UUID.randomUUID().toString())
                         .header("X-User-Id", validation.userId != null ? validation.userId.toString() : "")
-                        .header("X-Tenant-Id", "") // Map from claims if available in future
+                        .header("X-Tenant-Id", "")
                         .header("X-Scopes", scopes)
                         .header("X-Service-Name", "api-gateway")
                         .header("X-From-Gateway", "1")

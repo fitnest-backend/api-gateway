@@ -11,10 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Configuration to warm up OpenAPI documentation at startup.
- * This pre-generates the OpenAPI spec so the first request is fast.
- */
+
 @Configuration
 public class OpenApiWarmupConfig {
 
@@ -38,7 +35,6 @@ public class OpenApiWarmupConfig {
         try {
             warmupViaHttp();
         } catch (Exception e) {
-            // Non-critical, don't fail startup
         }
     }
 
@@ -62,7 +58,6 @@ public class OpenApiWarmupConfig {
 
             connection.disconnect();
         } catch (Exception e) {
-            // Ignore warmup failures
         }
     }
 }
