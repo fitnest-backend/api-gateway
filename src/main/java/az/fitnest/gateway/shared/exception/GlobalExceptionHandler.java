@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgumentException(IllegalArgumentException ex, ServerWebExchange exchange) {
-        return ErrorResponseBuilder.badRequest(safeMessage(ex.getMessage(), exchange), exchange.getRequest().getPath().value());
+        return ErrorResponseBuilder.badRequest(getMessage("error.invalid_argument", exchange), exchange.getRequest().getPath().value());
     }
 
     @ExceptionHandler(ConnectException.class)
