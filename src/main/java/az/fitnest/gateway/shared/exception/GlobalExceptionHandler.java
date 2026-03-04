@@ -1,4 +1,7 @@
 package az.fitnest.gateway.shared.exception;
+ 
+import az.fitnest.gateway.shared.exception.ApiResponse;
+import az.fitnest.gateway.shared.exception.ApiError;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
