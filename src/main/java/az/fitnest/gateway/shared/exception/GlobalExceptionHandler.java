@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     private String getMessage(String code) {
         try {
             return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
-        } catch (Exception e) {
+        } catch (org.springframework.context.NoSuchMessageException e) {
             return code;
         }
     }
