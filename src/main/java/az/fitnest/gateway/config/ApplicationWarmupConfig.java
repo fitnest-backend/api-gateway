@@ -16,7 +16,7 @@ public class ApplicationWarmupConfig {
     @Value("${app.warmup.enabled:true}")
     private boolean warmupEnabled;
 
-    public ApplicationWarmupConfig(@org.springframework.beans.factory.annotation.Qualifier("reactiveRedisTemplate") ReactiveRedisTemplate<String, String> redisTemplate) {
+    public ApplicationWarmupConfig(ReactiveRedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
