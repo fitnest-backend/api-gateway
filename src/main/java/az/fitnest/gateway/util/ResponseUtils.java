@@ -1,8 +1,8 @@
-package az.fitnest.gateway.web.support;
+package az.fitnest.gateway.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import az.fitnest.gateway.shared.exception.ApiError;
+import az.fitnest.gateway.exception.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;

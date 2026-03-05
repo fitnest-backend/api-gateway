@@ -122,7 +122,6 @@ spring:
               filters:
                 - StripPrefix=0
 
-            # OpenAPI doc proxy routes
             - id: identity-service-openapi
               uri: http://identity-service:8080
               predicates:
@@ -268,7 +267,6 @@ spring:
                 response-timeout: 15000
 
 
-# Removed Eureka configuration as it conflicts with Kubernetes/Istio DNS
 
 resilience4j:
   circuitbreaker:

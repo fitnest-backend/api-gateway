@@ -1,4 +1,4 @@
-package az.fitnest.gateway.config;
+package az.fitnest.gateway.configuration;
 
 import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;

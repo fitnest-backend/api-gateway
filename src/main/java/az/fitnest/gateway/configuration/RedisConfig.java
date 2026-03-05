@@ -1,4 +1,4 @@
-package az.fitnest.gateway.config;
+package az.fitnest.gateway.configuration;
  
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

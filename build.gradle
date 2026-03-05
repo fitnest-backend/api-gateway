@@ -34,20 +34,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // SpringDoc: Boot 4 compatible major line
     implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.2'
 
-    // JJWT: latest stable + correct classpath split
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
     runtimeOnly  'io.jsonwebtoken:jjwt-impl:0.13.0'
     runtimeOnly  'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
     implementation 'org.springframework.retry:spring-retry'
 
-    // Boot 4 is Jakarta-based; keep Jakarta annotation if you need @PostConstruct, etc.
     implementation 'jakarta.annotation:jakarta.annotation-api'
 
-    // Pin Lombok for reproducible builds
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
 }

@@ -1,4 +1,4 @@
-package az.fitnest.gateway.config;
+package az.fitnest.gateway.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

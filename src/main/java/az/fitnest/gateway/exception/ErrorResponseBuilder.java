@@ -1,6 +1,6 @@
-package az.fitnest.gateway.shared.exception.support;
+package az.fitnest.gateway.exception;
 
-import az.fitnest.gateway.shared.exception.ApiError;
+import az.fitnest.gateway.exception.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

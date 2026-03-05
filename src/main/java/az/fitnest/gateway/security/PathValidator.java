@@ -1,4 +1,4 @@
-package az.fitnest.gateway.security.support;
+package az.fitnest.gateway.security;
 
 import java.util.Set;
 

@@ -1,7 +1,7 @@
-package az.fitnest.gateway.security.support;
+package az.fitnest.gateway.security;
 
-import az.fitnest.gateway.web.support.RequestUtils;
-import az.fitnest.gateway.web.support.ResponseUtils;
+import az.fitnest.gateway.util.RequestUtils;
+import az.fitnest.gateway.util.ResponseUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 

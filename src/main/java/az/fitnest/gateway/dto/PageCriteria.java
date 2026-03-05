@@ -1,4 +1,4 @@
-package az.fitnest.gateway.shared.dto;
+package az.fitnest.gateway.dto;
 
 
 import lombok.Data;

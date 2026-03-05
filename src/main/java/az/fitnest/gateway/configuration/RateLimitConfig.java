@@ -1,4 +1,4 @@
-package az.fitnest.gateway.config;
+package az.fitnest.gateway.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
