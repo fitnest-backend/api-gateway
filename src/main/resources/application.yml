@@ -107,6 +107,13 @@ spring:
               filters:
                 - StripPrefix=0
 
+            - id: order-service
+              uri: http://order-service:8080
+              predicates:
+                - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**,/api/v1/admin/subscriptions/**,/api/v1/admin/plans/**
+              filters:
+                - StripPrefix=0
+
             - id: user-service
               uri: http://user-service:8080
               predicates:
@@ -115,12 +122,6 @@ spring:
                 - StripPrefix=0
                 - RequestRateLimiter=redisRateLimiter
 
-            - id: order-service
-              uri: http://order-service:8080
-              predicates:
-                - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**,/api/v1/admin/subscriptions/**,/api/v1/admin/plans/**
-              filters:
-                - StripPrefix=0
 
             - id: identity-service-openapi
               uri: http://identity-service:8080
