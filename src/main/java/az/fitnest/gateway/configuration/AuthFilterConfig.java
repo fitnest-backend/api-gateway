@@ -144,7 +144,6 @@ public class AuthFilterConfig {
                 .build();
     }
 
-
     @Bean
     public GlobalFilter securityHeadersFilter() {
         return (exchange, chain) -> {

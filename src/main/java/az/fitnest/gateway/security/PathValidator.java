@@ -12,8 +12,7 @@ public class PathValidator {
     }
 
     public static boolean requiresAuthForContent(String path) {
-        
-        
+
         return path.contains("/admin/") || path.endsWith("/admin");
     }
 
@@ -26,22 +25,19 @@ public class PathValidator {
             return false;
         }
 
-        
         if (path.contains("/admin/") || path.endsWith("/admin") ||
                 path.startsWith("/api/v1/me") || path.startsWith("/api/v1/internal/")) {
             return true;
         }
 
-        
         return AUTH_REQUIRED_PATHS.contains(path) ||
                 path.startsWith("/api/v1/media/upload") ||
                 path.startsWith("/api/v1/media/delete") ||
                 path.startsWith("/api/v1/media/move");
     }
 
-
     public static boolean isAdminRoute(String path) {
-        
+
         return path.startsWith("/api/v1/admin/") || path.contains("/admin");
     }
 

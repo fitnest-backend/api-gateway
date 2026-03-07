@@ -1,5 +1,5 @@
 package az.fitnest.gateway.exception;
- 
+
 import az.fitnest.gateway.exception.ApiResponse;
 import az.fitnest.gateway.exception.ApiError;
 

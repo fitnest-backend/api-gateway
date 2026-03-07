@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.Async;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
 @Configuration
 public class OpenApiWarmupConfig {
 

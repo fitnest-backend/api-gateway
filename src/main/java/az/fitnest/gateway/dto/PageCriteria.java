@@ -1,6 +1,5 @@
 package az.fitnest.gateway.dto;
 
-
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -15,13 +14,6 @@ public class PageCriteria {
     private Integer page;
     private Integer size;
     private SortDirection direction;
-
-
-
-
-
-
-
 
     public Integer getPage() {
         return page != null && page > 0 ? page - 1 : 0;

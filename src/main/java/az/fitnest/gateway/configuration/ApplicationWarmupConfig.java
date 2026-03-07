@@ -7,7 +7,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 
-
 @Configuration
 public class ApplicationWarmupConfig {
 
