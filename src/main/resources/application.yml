@@ -81,7 +81,7 @@ spring:
             - id: payment-service
               uri: http://payment-service:8080
               predicates:
-                - Path=/api/v1/payments/**,/api/v1/wallets/**
+                - Path=/api/v1/payments/**,/api/v1/wallets/**,/api/v1/me/cards/**,/api/v1/admin/payments/**,/api/v1/admin/idempotency/**,/epoint/**
               filters:
                 - StripPrefix=0
 
