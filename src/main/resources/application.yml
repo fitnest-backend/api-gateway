@@ -20,6 +20,8 @@ spring:
   main:
     web-application-type: reactive
     lazy-initialization: ${SPRING_MAIN_LAZY_INITIALIZATION:false}
+  messages:
+    encoding: UTF-8
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:${REDIS_HOST:redis}}
