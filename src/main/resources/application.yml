@@ -58,6 +58,13 @@ spring:
                 - StripPrefix=0
                 - RequestRateLimiter=redisRateLimiter
 
+            - id: catalog-media-stream
+              uri: http://catalog-service:8080
+              predicates:
+                - Path=/api/v1/media/stream/**
+              filters:
+                - StripPrefix=0
+
             - id: storage-service
               uri: http://storage-service:8080
               predicates:
