@@ -64,6 +64,8 @@ spring:
                 - Path=/api/v1/media/stream/**
               filters:
                 - StripPrefix=0
+              metadata:
+                response-timeout: 60000 # Allow longer streaming time (60s)
 
             - id: storage-service
               uri: http://storage-service:8080
