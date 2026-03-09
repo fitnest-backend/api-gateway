@@ -64,6 +64,8 @@ spring:
                 - Path=/api/v1/media/**
               filters:
                 - StripPrefix=0
+              metadata:
+                response-timeout: 60000 # Increased timeout for streaming (60s)
 
             - id: catalog-service
               uri: http://catalog-service:8080
