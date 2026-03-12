@@ -53,7 +53,7 @@ spring:
             - id: identity-service
               uri: http://identity-service:8080
               predicates:
-                - Path=/api/v1/auth/**,/api/v1/legal/**,/api/v1/admin/users/**,/api/v1/admin/roles/**,/api/v1/admin/legal/**,/api/v1/me/change-email/**,/api/v1/me/change-mobile/**,/api/v1/me/change-password,/api/v1/me/deactivate,/api/v1/auth/registration/**,/api/v1/auth/password-recovery/**
+                - Path=/api/v1/auth/**,/api/v1/legal/**,/api/v1/admin/users/**,/api/v1/admin/roles/**,/api/v1/admin/legal/**,/api/v1/me/change-email/**,/api/v1/me/change-mobile/**,/api/v1/me/change-password,/api/v1/me/deactivate,/api/v1/auth/registration/**,/api/v1/auth/password-recovery/**,/api/v1/me/delete-account
               filters:
                 - StripPrefix=0
                 - RequestRateLimiter=redisRateLimiter
@@ -279,7 +279,6 @@ spring:
                       factor: 2
               metadata:
                 response-timeout: 15000
-
 
 
 resilience4j:
