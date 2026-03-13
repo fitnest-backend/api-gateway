@@ -35,6 +35,24 @@ public class AuthFilterConfig {
         return (exchange, chain) -> {
             ServerWebExchange sanitizedExchange = sanitizeHeaders(exchange);
             String path = sanitizedExchange.getRequest().getPath().value();
+            String authHeader = sanitizedExchange.getRequest().getHeaders().getFirst("Authorization");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                return jwtProcessor.validateToken(token)
+                    .flatMap(validation -> {
+                        if (!validation.valid) {
+                            return ResponseUtils.respondWithUnauthorized(sanitizedExchange);
+                        }
+                        String userId = validation.userId != null ? validation.userId.toString() : "";
+                        String roles = validation.roles != null ? String.join(",", validation.roles) : "";
+                        ServerWebExchange updatedExchange = sanitizedExchange.mutate()
+                            .request(builder -> builder
+                                .header("X-User-Id", userId)
+                                .header("X-User-Roles", roles)
+                            ).build();
+                        return chain.filter(updatedExchange);
+                    });
+            }
 
             if (path.contains("/internal/")) {
                 return ResponseUtils.respondWithForbidden(sanitizedExchange);
