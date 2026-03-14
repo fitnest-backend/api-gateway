@@ -123,7 +123,7 @@ spring:
             - id: order-service
               uri: http://order-service:8080
               predicates:
-                - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**,/api/v1/admin/subscriptions/**,/api/v1/admin/plans/**
+                - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**,/api/v1/admin/subscriptions/**,/api/v1/admin/plans/**,/api/v1/admin/subscription-packages/**
               filters:
                 - StripPrefix=0
 
