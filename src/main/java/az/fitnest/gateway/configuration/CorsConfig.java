@@ -18,8 +18,10 @@ public class CorsConfig {
 
         List<String> allowedOrigins = new java.util.ArrayList<>();
         allowedOrigins.add("https://fitnest.vercel.app");
+        allowedOrigins.add("https://fitnest.az");
 
         allowedOrigins.add("http://localhost:3000");
+
         allowedOrigins.add("http://127.0.0.1:3000");
         allowedOrigins.add("http://161.97.183.7");
         allowedOrigins.add("http://161.*");
