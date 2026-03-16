@@ -367,3 +367,16 @@ grpc:
     catalog-service:
       address: 'dns:///catalog-service.fitnest-dev.svc.cluster.local:9090'
       negotiation-type: plaintext
+
+limits:
+  auth.login.post: 5
+  auth.verify-otp.post: 5
+  auth.request-otp.post: 3
+  auth.send-reset-password-link.post: 2
+  auth.reset-password.post: 5
+  general.write: 60
+  general.read: 300
+  # OTP endpoints strict rate limits
+  auth.otp.send: 3
+  auth.otp.resend: 3
+  auth.otp.daily: 10
