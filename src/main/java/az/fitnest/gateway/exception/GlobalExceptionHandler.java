@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.context.request.WebRequest;
+import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 
@@ -35,15 +37,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException ex, WebRequest request) {
+    public Mono<ResponseEntity<ApiResponse<Void>>> handleRuntimeException(RuntimeException ex, ServerWebExchange exchange) {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .code("RUNTIME_EXCEPTION")
                 .message(getMessage("error.unexpected"))
-                .path(request.getDescription(false).replace("uri=", ""))
+                .path(exchange.getRequest().getPath().value())
                 .timestamp(OffsetDateTime.now())
                 .build();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(apiError));
+        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(apiError)));
     }
 
     @ExceptionHandler(Exception.class)

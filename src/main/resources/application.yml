@@ -48,7 +48,7 @@ spring:
         webflux:
           httpclient:
             connect-timeout: 2000
-            response-timeout: 8s
+            response-timeout: 15s
           routes:
             - id: identity-service
               uri: http://identity-service:8080
