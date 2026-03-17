@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.context.request.WebRequest;
 import reactor.core.publisher.Mono;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.time.OffsetDateTime;
 
@@ -58,6 +59,29 @@ public class GlobalExceptionHandler {
                 .timestamp(OffsetDateTime.now())
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(apiError));
+    }
+
+    @ExceptionHandler(WebClientResponseException.class)
+    public ResponseEntity<ApiResponse<Void>> handleWebClientResponseException(WebClientResponseException ex, WebRequest request) {
+        if (ex.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
+            ApiError apiError = ApiError.builder()
+                    .status(HttpStatus.TOO_MANY_REQUESTS.value())
+                    .code("error.otp.rate_limit_generic")
+                    .message(getMessage("error.otp.rate_limit_generic"))
+                    .path(request.getDescription(false).replace("uri=", ""))
+                    .timestamp(OffsetDateTime.now())
+                    .build();
+            return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ApiResponse.error(apiError));
+        }
+        // fallback to generic error
+        ApiError apiError = ApiError.builder()
+                .status(ex.getStatusCode().value())
+                .code("WEB_CLIENT_ERROR")
+                .message(getMessage("error.unexpected"))
+                .path(request.getDescription(false).replace("uri=", ""))
+                .timestamp(OffsetDateTime.now())
+                .build();
+        return ResponseEntity.status(ex.getStatusCode()).body(ApiResponse.error(apiError));
     }
 
     private String getMessage(String code) {
