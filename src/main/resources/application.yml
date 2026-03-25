@@ -102,7 +102,7 @@ spring:
             - id: support-service
               uri: http://support-service:8080
               predicates:
-                - Path=/api/v1/support/**,/api/v1/tickets/**,/api/v1/faqs/**,/api/v1/admin/faqs/**,/api/v1/admin/tickets/**
+                - Path=/api/v1/support/**,/api/v1/tickets/**,/api/v1/faqs/**,/api/v1/admin/faqs/**,/api/v1/admin/tickets/**,/api/v1/faq-categories/**,/api/v1/admin/faq-categories/**
               filters:
                 - StripPrefix=0
 
