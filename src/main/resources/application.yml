@@ -130,7 +130,7 @@ spring:
             - id: user-service
               uri: http://user-service:8080
               predicates:
-                - Path=/api/v1/me,/api/v1/me/**,/api/v1/users/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**,/api/v1/admin/goals/**,/api/v1/recent-searches/**
+                - Path=/api/v1/me,/api/v1/me/**,/api/v1/users/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**,/api/v1/admin/goals/**,/api/v1/recent-searches/**,/api/v1/bmi/calculate
               filters:
                 - StripPrefix=0
                 - RequestRateLimiter=redisRateLimiter

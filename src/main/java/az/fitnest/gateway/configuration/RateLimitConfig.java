@@ -60,8 +60,7 @@ public class RateLimitConfig {
         } else if (path.equals("/api/v1/auth/reset-password") && isWrite) {
             return "auth.reset-password.post";
         }
-        
-        // Map other OTP paths to daily or request limits if needed
+
         if (path.contains("/otp/") && isWrite) {
              return "auth.request-otp.post";
         }

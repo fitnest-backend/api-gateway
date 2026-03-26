@@ -73,7 +73,6 @@ public class GlobalExceptionHandler {
                     .build();
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(ApiResponse.error(apiError));
         }
-        // fallback to generic error
         ApiError apiError = ApiError.builder()
                 .status(ex.getStatusCode().value())
                 .code("WEB_CLIENT_ERROR")
