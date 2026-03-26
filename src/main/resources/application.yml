@@ -94,7 +94,32 @@ spring:
             - id: payment-service
               uri: http://payment-service:8080
               predicates:
-                - Path=/api/v1/payments,/api/v1/payments/history,/api/v1/wallets,/api/v1/me/cards,/api/v1/me/payments,/api/v1/me/payments/history,/api/v1/admin/payments,/api/v1/admin/idempotency,/epoint,/payment
+                - Path=/api/v1/payments
+                - Path=/api/v1/payments/history
+                - Path=/api/v1/wallets
+                - Path=/api/v1/me/cards
+                - Path=/api/v1/me/cards/default
+                - Path=/api/v1/me/cards/{cardId}
+                - Path=/api/v1/me/payments
+                - Path=/api/v1/me/payments/history
+                - Path=/api/v1/admin/payments
+                - Path=/api/v1/admin/payments/{paymentId}
+                - Path=/api/v1/admin/payments/order/{orderId}
+                - Path=/api/v1/admin/payments/transaction/{transactionId}
+                - Path=/api/v1/admin/idempotency
+                - Path=/api/v1/admin/idempotency/stats
+                - Path=/api/v1/admin/idempotency/key/{idempotencyKey}
+                - Path=/api/v1/admin/idempotency/cache/{idempotencyKey}
+                - Path=/api/v1/admin/idempotency/cache
+                - Path=/epoint
+                - Path=/payment
+                - Path=/payment/result
+                - Path=/payment/callback
+                - Path=/payment/epoint/callback
+                - Path=/payment/payment/init
+                - Path=/payment/payment/status/{orderId}
+                - Path=/payment/card/save-init
+                - Path=/payment/payment/with-card
               filters:
                 - StripPrefix=0
 
