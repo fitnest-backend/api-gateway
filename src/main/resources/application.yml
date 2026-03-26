@@ -120,6 +120,7 @@ spring:
                 - Path=/payment/payment/status/{orderId}
                 - Path=/payment/card/save-init
                 - Path=/payment/payment/with-card
+                - Path=/api/heartbeat
               filters:
                 - StripPrefix=0
 
@@ -155,7 +156,17 @@ spring:
             - id: user-service
               uri: http://user-service:8080
               predicates:
-                - Path=/api/v1/me,/api/v1/me/**,/api/v1/users/**,/api/v1/files/**,/api/v1/goals/**,/api/v1/languages/**,/api/v1/favorites/**,/api/v1/translations/**,/api/v1/admin/goals/**,/api/v1/recent-searches/**,/api/v1/bmi/calculate
+                - Path=/api/v1/me
+                - Path=/api/v1/users/**
+                - Path=/api/v1/files/**
+                - Path=/api/v1/goals/**
+                - Path=/api/v1/languages/**
+                - Path=/api/v1/favorites/**
+                - Path=/api/v1/translations/**
+                - Path=/api/v1/admin/goals/**
+                - Path=/api/v1/recent-searches/**
+                - Path=/api/v1/bmi/calculate
+                - Path=/api/v1/bmi
               filters:
                 - StripPrefix=0
                 - RequestRateLimiter=redisRateLimiter
