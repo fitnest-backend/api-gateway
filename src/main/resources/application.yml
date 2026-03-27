@@ -134,7 +134,12 @@ spring:
                   /api/v1/gyms/count/by-subscription,
                   /api/v1/gyms/count/by-gender,
                   /api/v1/gyms/entrance/scan,
-                  /api/v1/gyms/entrance/eligibility
+                  /api/v1/gyms/entrance/eligibility,
+                  /api/v1/stores,
+                  /api/v1/stores/{storeId:\d+},
+                  /api/v1/stores/{storeId:\d+}/location,
+                  /api/v1/stores/{storeId}/save
+
               filters:
                 - StripPrefix=0
 
