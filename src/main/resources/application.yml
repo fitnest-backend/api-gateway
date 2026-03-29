@@ -156,13 +156,16 @@ spring:
                   /api/v1/notifications/{id},
                   /api/v1/notifications/all,
                   /api/v1/devices/register,
-                  /api/v1/devices,
                   /api/v1/devices/user/{userId},
                   /api/v1/devices/send,
                   /api/v1/sms/send,
                   /api/v1/sms/balance,
                   /api/v1/sms/report/{transactionId},
-                  /api/v1/admin/notifications/broadcast
+                  /api/v1/admin/notifications/broadcast,
+                  /api/v1/admin/devices,
+                  /api/v1/admin/devices/user/{userId},
+                  /api/v1/admin/devices/send,
+                  /api/v1/admin/devices/{deviceId}
               filters:
                 - StripPrefix=0
 
