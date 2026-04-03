@@ -153,7 +153,8 @@ spring:
                   /api/v1/stores,
                   /api/v1/stores/{storeId:\d+},
                   /api/v1/stores/{storeId:\d+}/location,
-                  /api/v1/stores/{storeId}/save
+                  /api/v1/stores/{storeId}/save,
+                  /api/v1/media/stream/{fsId}
 
               filters:
                 - StripPrefix=0
