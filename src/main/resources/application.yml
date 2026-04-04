@@ -190,6 +190,7 @@ spring:
                   /api/v1/me/cards/{cardId},
                   /api/v1/me/cards,
                   /api/heartbeat,
+                  /api/v1/me/payments/history/{transactionId},
                   /payment/result,
                   /payment/callback,
                   /payment/epoint/callback,
