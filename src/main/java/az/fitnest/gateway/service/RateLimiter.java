@@ -39,7 +39,7 @@ public class RateLimiter {
         this.rateLimitConfig = rateLimitConfig;
     }
 
-    public Mono<Long> checkRateLimit(String clientIP, String path, String method) {
+    public Mono<Long> checkRateLimit(String identifier, String path, String method) {
         boolean isRead = "GET".equals(method);
         String key;
         String rateLimitKey = rateLimitConfig.getRateLimitKey(path, method);
@@ -48,10 +48,10 @@ public class RateLimiter {
 
         if (isRead) {
             String category = rateLimitConfig.getReadCategory(path);
-            key = "ratelimit:get:" + clientIP + ":" + category;
+            key = "ratelimit:get:" + identifier + ":" + category;
         } else {
             String normalizedPath = normalizePathForRateLimit(path);
-            key = "ratelimit:write:" + clientIP + ":" + normalizedPath;
+            key = "ratelimit:write:" + identifier + ":" + normalizedPath;
         }
 
         return redisTemplate.execute(RATE_LIMIT_SCRIPT, Collections.singletonList(key),

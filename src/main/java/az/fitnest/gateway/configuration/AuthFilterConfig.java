@@ -35,44 +35,37 @@ public class AuthFilterConfig {
         return (exchange, chain) -> {
             ServerWebExchange sanitizedExchange = sanitizeHeaders(exchange);
             String path = sanitizedExchange.getRequest().getPath().value();
-            String authHeader = sanitizedExchange.getRequest().getHeaders().getFirst("Authorization");
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                return jwtProcessor.validateToken(token)
-                    .flatMap(validation -> {
-                        if (!validation.valid) {
-                            return ResponseUtils.respondWithUnauthorized(sanitizedExchange);
-                        }
-                        String userId = validation.userId != null ? validation.userId.toString() : "";
-                        String roles = validation.roles != null ? String.join(",", validation.roles) : "";
-                        ServerWebExchange updatedExchange = sanitizedExchange.mutate()
-                            .request(builder -> builder
-                                .header("X-User-Id", userId)
-                                .header("X-User-Roles", roles)
-                            ).build();
-                        return chain.filter(updatedExchange);
-                    });
-            }
+            String method = sanitizedExchange.getRequest().getMethod().name();
+            String clientIP = RequestUtils.extractClientIP(sanitizedExchange.getRequest());
 
             if (path.contains("/internal/")) {
                 return ResponseUtils.respondWithForbidden(sanitizedExchange);
             }
 
             if (path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.startsWith("/swagger")) {
-                return chain.filter(addAnonymousHeaders(sanitizedExchange));
+                return chain.filter(addAnonymousHeaders(sanitizedExchange, clientIP));
             }
 
-            String method = sanitizedExchange.getRequest().getMethod().name();
-            String clientIP = RequestUtils.extractClientIP(sanitizedExchange.getRequest());
+            String token = RequestUtils.extractToken(sanitizedExchange);
+            Mono<JwtProcessor.TokenValidationResult> validationMono = (token != null && !token.isEmpty())
+                    ? jwtProcessor.validateToken(token)
+                    : Mono.just(new JwtProcessor.TokenValidationResult(false, null, null, null, null));
 
-            return rateLimiter.checkRateLimit(clientIP, path, method)
-                    .flatMap(result -> {
-                        if (result == -1) {
-                            return ResponseUtils.respondWithTooManyRequests(sanitizedExchange);
-                        }
+            return validationMono.flatMap(validation -> {
+                String identifier = clientIP;
+                if (validation.valid && validation.userId != null) {
+                    identifier = "user:" + validation.userId;
+                }
 
-                        return proceedWithAuth(sanitizedExchange, chain, path, method, clientIP);
-                    });
+                return rateLimiter.checkRateLimit(identifier, path, method)
+                        .flatMap(result -> {
+                            if (result == -1) {
+                                return ResponseUtils.respondWithTooManyRequests(sanitizedExchange);
+                            }
+
+                            return proceedWithValidationResult(sanitizedExchange, chain, path, clientIP, token, validation);
+                        });
+            });
         };
     }
 
@@ -93,21 +86,18 @@ public class AuthFilterConfig {
                 .build();
     }
 
-    private Mono<Void> proceedWithAuth(ServerWebExchange exchange, GatewayFilterChain chain, String path, String method, String clientIP) {
-        String token = RequestUtils.extractToken(exchange);
+    private Mono<Void> proceedWithValidationResult(ServerWebExchange exchange, GatewayFilterChain chain, String path, String clientIP, String token, JwtProcessor.TokenValidationResult validation) {
         boolean requiresAuth = PathValidator.requiresAuth(path);
-        boolean isStateChanging = RequestUtils.isStateChangingMethod(method);
 
-        if (requiresAuth && (token == null || token.isEmpty())) {
+        if (requiresAuth && (token == null || token.isEmpty() || !validation.valid)) {
             return handleAuthFailure(exchange, clientIP, path);
         }
 
         if (token != null && !token.isEmpty()) {
-            return jwtProcessor.validateToken(token)
-                    .flatMap(validation -> handleTokenValidation(exchange, chain, validation, requiresAuth, clientIP, path, token));
+            return handleTokenValidation(exchange, chain, validation, requiresAuth, clientIP, path, token);
         }
 
-        return chain.filter(addAnonymousHeaders(exchange));
+        return chain.filter(addAnonymousHeaders(exchange, clientIP));
     }
 
     private Mono<Void> handleAuthFailure(ServerWebExchange exchange, String clientIP, String path) {
@@ -123,7 +113,7 @@ public class AuthFilterConfig {
             if (requiresAuth) {
                 return handleAuthFailure(exchange, clientIP, path);
             } else {
-                return chain.filter(addAnonymousHeaders(exchange));
+                return chain.filter(addAnonymousHeaders(exchange, clientIP));
             }
         }
 
@@ -133,15 +123,16 @@ public class AuthFilterConfig {
                         return ResponseUtils.respondWithForbidden(exchange);
                     }
 
-                    ServerWebExchange modifiedExchange = addUserHeaders(exchange, validation);
+                    ServerWebExchange modifiedExchange = addUserHeaders(exchange, validation, clientIP);
                     return chain.filter(modifiedExchange);
                 });
     }
 
-    private ServerWebExchange addUserHeaders(ServerWebExchange exchange, JwtProcessor.TokenValidationResult validation) {
+    private ServerWebExchange addUserHeaders(ServerWebExchange exchange, JwtProcessor.TokenValidationResult validation, String clientIP) {
         String scopes = validation.roles != null ? String.join(" ", validation.roles) : "";
         return exchange.mutate()
                 .request(exchange.getRequest().mutate()
+                        .header("X-Client-IP", clientIP)
                         .header("X-Request-Id", UUID.randomUUID().toString())
                         .header("X-User-Id", validation.userId != null ? validation.userId.toString() : "")
                         .header("X-Tenant-Id", "")
@@ -152,9 +143,10 @@ public class AuthFilterConfig {
                 .build();
     }
 
-    private ServerWebExchange addAnonymousHeaders(ServerWebExchange exchange) {
+    private ServerWebExchange addAnonymousHeaders(ServerWebExchange exchange, String clientIP) {
         return exchange.mutate()
                 .request(exchange.getRequest().mutate()
+                        .header("X-Client-IP", clientIP)
                         .header("X-Request-Id", UUID.randomUUID().toString())
                         .header("X-Service-Name", "api-gateway")
                         .header("X-From-Gateway", "1")
