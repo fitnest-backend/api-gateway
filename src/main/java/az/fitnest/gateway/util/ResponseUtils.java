@@ -65,13 +65,13 @@ public class ResponseUtils {
 
     public static Mono<Void> respondWithForbidden(org.springframework.web.server.ServerWebExchange exchange) {
         ServerHttpResponse response = exchange.getResponse();
-        response.setStatusCode(HttpStatus.FORBIDDEN);
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
         ApiError error = ApiError.builder()
-                .code("FORBIDDEN")
-                .message(resolveMessage("error.forbidden"))
-                .status(HttpStatus.FORBIDDEN.value())
+                .code("UNAUTHORIZED")
+                .message(resolveMessage("error.unauthorized"))
+                .status(HttpStatus.UNAUTHORIZED.value())
                 .path(exchange.getRequest().getPath().value())
                 .timestamp(java.time.OffsetDateTime.now())
                 .build();
