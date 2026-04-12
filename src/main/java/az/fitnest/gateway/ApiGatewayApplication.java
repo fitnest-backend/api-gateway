@@ -14,51 +14,241 @@ public class ApiGatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                // ========== Business Routes ==========
-                .route("identity-backend", r -> r.path("/api/v1/identity/**", "/api/v1/auth/**", "/api/v1/legal/**", "/api/v1/admin/legal/**", "/api/v1/admin/users/**", "/api/v1/admin/roles/**", "/api/v1/internal/users/**", "/api/v1/me/**")
-                        .uri("http://identity-backend:8080"))
-                .route("catalog-backend", r -> r.path("/api/v1/admin/stores/**", "/api/v1/admin/gyms/**", "/api/v1/admin/translations/**", "/api/v1/admin/categories/**", "/api/v1/categories/**", "/api/v1/gyms/**", "/api/v1/stores/**", "/api/v1/media/stream/**")
-                        .uri("http://catalog-backend:8080"))
-                .route("notifications-backend", r -> r.path("/api/v1/notifications/**", "/api/v1/devices/**", "/api/v1/sms/**", "/api/v1/admin/notifications/**", "/api/v1/admin/devices/**")
-                        .uri("http://notifications-backend:8080"))
-                .route("payment-backend", r -> r.path("/api/v1/me/payments/**", "/api/v1/me/cards/**", "/api/heartbeat", "/payment/**")
-                        .uri("http://payment-backend:8080"))
-                .route("support-backend", r -> r.path("/api/v1/admin/faqs/**", "/api/v1/admin/faq-categories/**", "/api/v1/admin/support/**", "/api/v1/support/**", "/api/v1/faqs/**", "/api/v1/faq-categories/**", "/api/v1/tickets/**")
-                        .uri("http://support-backend:8080"))
-                .route("fitness-plan-backend", r -> r.path("/api/v1/nutrition-plans/**", "/api/v1/workout-plans/**")
-                        .uri("http://fitness-plan-backend:8080"))
-                .route("order-backend", r -> r.path("/api/v1/subscription-packages/**", "/api/v1/me/subscriptions/**", "/api/v1/subscriptions/**", "/api/v1/orders/**", "/api/v1/admin/subscriptions/**", "/api/v1/admin/plans/**", "/api/v1/admin/subscription-packages/**", "/admin/subscription/**")
-                        .uri("http://order-backend:8080"))
-                .route("user-backend", r -> r.path("/api/v1/admin/goals/**", "/api/v1/bmi/**", "/api/v1/recent-searches/**", "/api/v1/goals/**", "/api/v1/languages/**", "/api/v1/translations/**", "/api/v1/me/summary", "/api/v1/me/**")
-                        .uri("http://user-backend:8080"))
+                // ========== identity-backend ==========
+                .route("identity-backend", r -> r.path(
+                        "/api/v1/identity/me",
+                        "/api/v1/me/change-email/request",
+                        "/api/v1/me/change-email/confirm",
+                        "/api/v1/me/change-mobile/request",
+                        "/api/v1/me/change-mobile/confirm",
+                        "/api/v1/me/change-password",
+                        "/api/v1/me/delete-account",
+                        "/api/v1/me/change-email/resend",
+                        "/api/v1/me/change-mobile/resend",
+                        "/api/v1/auth/login",
+                        "/api/v1/auth/refresh",
+                        "/api/v1/auth/logout",
+                        "/api/v1/auth/social/apple",
+                        "/api/v1/auth/social/google",
+                        "/api/v1/auth/registration/register",
+                        "/api/v1/auth/registration/register/complete",
+                        "/api/v1/auth/password-recovery/forgot-password",
+                        "/api/v1/auth/password-recovery/reset-password",
+                        "/api/v1/auth/otp/verify",
+                        "/api/v1/auth/otp/registration/register/resend",
+                        "/api/v1/legal/privacy-policy",
+                        "/api/v1/legal/terms-of-use",
+                        "/api/v1/legal/consents/me",
+                        "/api/v1/admin/legal/documents",
+                        "/api/v1/admin/legal/documents/{id}",
+                        "/api/v1/admin/legal/documents/{id}/activate",
+                        "/api/v1/admin/legal/documents/{id}/deactivate",
+                        "/api/v1/admin/legal/consents",
+                        "/api/v1/admin/users",
+                        "/api/v1/admin/users/{userId}/role",
+                        "/api/v1/admin/users/all",
+                        "/api/v1/admin/users/{userId}/profile",
+                        "/api/v1/admin/users/rate-limit/reset",
+                        "/api/v1/admin/users/otp-rate-limit/reset",
+                        "/api/v1/admin/users/otp-rate-limit/reset-all",
+                        "/api/v1/admin/roles",
+                        "/api/v1/admin/roles/{roleId}",
+                        "/api/v1/internal/users/{userId}",
+                        "/api/v1/internal/users/{userId}/profile-image",
+                        "/api/v1/internal/users/{userId}/setup-required",
+                        "/api/v1/internal/users/{userId}/language",
+                        "/api/v1/internal/users/{userId}/session-status"
+                ).uri("http://identity-backend:8080"))
+
+                // ========== catalog-backend ==========
+                .route("catalog-backend", r -> r.path(
+                        "/api/v1/admin/stores",
+                        "/api/v1/admin/stores/{id}",
+                        "/api/v1/admin/stores/{id}/logo",
+                        "/api/v1/admin/stores/{id}/cover",
+                        "/api/v1/admin/stores/all",
+                        "/api/v1/admin/gyms",
+                        "/api/v1/admin/translations",
+                        "/api/v1/admin/translations/{id}",
+                        "/api/v1/admin/gyms/{id}",
+                        "/api/v1/admin/gyms/{id}/subscriptions",
+                        "/api/v1/admin/gyms/{id}/subscriptions/{subscriptionId}",
+                        "/api/v1/admin/gyms/{id}/subscriptions/enable",
+                        "/api/v1/admin/gyms/{id}/subscriptions/{planId}/benefits",
+                        "/api/v1/admin/gyms/{id}/rooms",
+                        "/api/v1/admin/gyms/{id}/rooms/{roomId}",
+                        "/api/v1/admin/gyms/{id}/trainers",
+                        "/api/v1/admin/gyms/{id}/trainers/{trainerId}",
+                        "/api/v1/admin/gyms/reviews/pending",
+                        "/api/v1/admin/gyms/reviews/{reviewId}/approve",
+                        "/api/v1/admin/gyms/reviews/{reviewId}/reject",
+                        "/api/v1/admin/gyms/{id}/cover",
+                        "/api/v1/admin/gyms/all",
+                        "/api/v1/admin/categories",
+                        "/api/v1/admin/categories/all",
+                        "/api/v1/admin/categories/{id}",
+                        "/api/v1/admin/categories/{categoryId}/name",
+                        "/api/v1/admin/categories/{categoryId}/photo",
+                        "/api/v1/admin/categories/{categoryId}/icon",
+                        "/api/v1/categories",
+                        "/api/v1/gyms/{gymId}",
+                        "/api/v1/gyms/{gymId}/images",
+                        "/api/v1/gyms/{gymId}/qr",
+                        "/api/v1/gyms/{gymId}/trainers",
+                        "/api/v1/gyms/{gymId}/reviews",
+                        "/api/v1/gyms/{gymId}/reservation-rules",
+                        "/api/v1/gyms/{gymId}/location",
+                        "/api/v1/gyms/{gymId}/save",
+                        "/api/v1/gyms",
+                        "/api/v1/gyms/count",
+                        "/api/v1/gyms/count/by-type",
+                        "/api/v1/gyms/count/by-category",
+                        "/api/v1/gyms/count/by-subscription",
+                        "/api/v1/gyms/count/by-gender",
+                        "/api/v1/gyms/entrance/scan",
+                        "/api/v1/gyms/entrance/eligibility",
+                        "/api/v1/stores",
+                        "/api/v1/stores/{storeId}",
+                        "/api/v1/stores/{storeId}/location",
+                        "/api/v1/stores/{storeId}/save",
+                        "/api/v1/media/stream/{fsId}"
+                ).uri("http://catalog-backend:8080"))
+
+                // ========== notifications-backend ==========
+                .route("notifications-backend", r -> r.path(
+                        "/api/v1/notifications",
+                        "/api/v1/notifications/{id}/read",
+                        "/api/v1/notifications/read-all",
+                        "/api/v1/notifications/{id}",
+                        "/api/v1/notifications/all",
+                        "/api/v1/devices/register",
+                        "/api/v1/devices/user/{userId}",
+                        "/api/v1/devices/send",
+                        "/api/v1/sms/send",
+                        "/api/v1/sms/balance",
+                        "/api/v1/sms/report/{transactionId}",
+                        "/api/v1/admin/notifications/broadcast",
+                        "/api/v1/admin/devices",
+                        "/api/v1/admin/devices/user/{userId}",
+                        "/api/v1/admin/devices/send",
+                        "/api/v1/admin/devices/{deviceId}"
+                ).uri("http://notifications-backend:8080"))
+
+                // ========== payment-backend ==========
+                .route("payment-backend", r -> r.path(
+                        "/api/v1/me/payments/history",
+                        "/api/v1/me/cards/default",
+                        "/api/v1/me/cards/{cardId}",
+                        "/api/v1/me/cards",
+                        "/api/heartbeat",
+                        "/api/v1/me/payments/history/{transactionId}",
+                        "/payment/result",
+                        "/payment/callback",
+                        "/payment/epoint/callback",
+                        "/payment/payment/init",
+                        "/payment/payment/status/{orderId}",
+                        "/payment/card/save-init",
+                        "/payment/payment/with-card",
+                        "/payment/payment/save-and-pay",
+                        "/payment/refund",
+                        "/payment/reverse",
+                        "/payment/payment/split-init",
+                        "/payment/split/with-card",
+                        "/payment/payment/split-save-and-pay",
+                        "/payment/pre-auth-request",
+                        "/payment/pre-auth-complete",
+                        "/payment/widget-url",
+                        "/payment/wallet/status",
+                        "/payment/wallet/pay",
+                        "/payment/invoice/create",
+                        "/payment/invoice/update",
+                        "/payment/invoice/view/{id}",
+                        "/payment/invoice/list",
+                        "/payment/invoice/send-sms/{id}",
+                        "/payment/invoice/send-email/{id}",
+                        "/payment/heartbeat"
+                ).uri("http://payment-backend:8080"))
+
+                // ========== support-backend ==========
+                .route("support-backend", r -> r.path(
+                        "/api/v1/admin/faqs",
+                        "/api/v1/admin/faqs/{id}",
+                        "/api/v1/admin/faq-categories",
+                        "/api/v1/admin/faq-categories/{id}",
+                        "/api/v1/admin/support/tickets",
+                        "/api/v1/admin/support/tickets/{id}/status",
+                        "/api/v1/admin/support/contact-details",
+                        "/api/v1/support/contactDetails",
+                        "/api/v1/faqs",
+                        "/api/v1/faq-categories",
+                        "/api/v1/tickets",
+                        "/api/v1/tickets/{id}"
+                ).uri("http://support-backend:8080"))
+
+                // ========== fitness-plan-backend ==========
+                .route("fitness-plan-backend", r -> r.path(
+                        "/api/v1/nutrition-plans/**",
+                        "/api/v1/workout-plans/**"
+                ).uri("http://fitness-plan-backend:8080"))
+
+                // ========== order-backend ==========
+                .route("order-backend", r -> r.path(
+                        "/api/v1/subscription-packages/**",
+                        "/api/v1/me/subscriptions/**",
+                        "/api/v1/subscriptions/upgrade/**",
+                        "/api/v1/orders/**",
+                        "/api/v1/admin/subscriptions/**",
+                        "/api/v1/admin/plans/**",
+                        "/api/v1/admin/subscription-packages/**",
+                        "/admin/subscription/**"
+                ).uri("http://order-backend:8080"))
+
+                // ========== user-backend ==========
+                .route("user-backend", r -> r.path(
+                        "/api/v1/admin/goals",
+                        "/api/v1/admin/goals/{code}",
+                        "/api/v1/admin/goals/{code}/image",
+                        "/api/v1/bmi/calculate",
+                        "/api/v1/recent-searches",
+                        "/api/v1/recent-searches/all",
+                        "/api/v1/goals",
+                        "/api/v1/goals/{code}",
+                        "/api/v1/goals/images/{fsId}",
+                        "/api/v1/languages",
+                        "/api/v1/languages/{code}",
+                        "/api/v1/translations",
+                        "/api/v1/translations/{entityType}/{entityId}",
+                        "/api/v1/translations/goals",
+                        "/api/v1/translations/gender",
+                        "/api/v1/me/summary",
+                        "/api/v1/me",
+                        "/api/v1/me/location",
+                        "/api/v1/me/body",
+                        "/api/v1/me/profile-image",
+                        "/api/v1/me/goal",
+                        "/api/v1/me/preferences",
+                        "/api/v1/me/language",
+                        "/api/v1/me/languages",
+                        "/api/v1/me/setup",
+                        "/api/v1/me/setup/complete",
+                        "/api/v1/me/setup/skip",
+                        "/api/v1/me/fitness-level",
+                        "/api/v1/me/profile/images/{fsId}"
+                ).uri("http://user-backend:8080"))
+
+                // ========== argocd ==========
                 .route("argocd", r -> r.path("/api/v1/applications/**", "/api/v1/stream/applications/**")
                         .uri("http://argocd-server.argocd.svc:8080"))
 
-                // ========== OpenAPI Routes ==========
-                .route("identity-openapi", r -> r.path("/v3/api-docs/identity-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://identity-backend:8080"))
-                .route("catalog-openapi", r -> r.path("/v3/api-docs/catalog-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://catalog-backend:8080"))
-                .route("notifications-openapi", r -> r.path("/v3/api-docs/notifications-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://notifications-backend:8080"))
-                .route("payment-openapi", r -> r.path("/v3/api-docs/payment-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://payment-backend:8080"))
-                .route("support-openapi", r -> r.path("/v3/api-docs/support-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://support-backend:8080"))
-                .route("user-openapi", r -> r.path("/v3/api-docs/user-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://user-backend:8080"))
-                .route("fitness-plan-openapi", r -> r.path("/v3/api-docs/fitness-plan-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://fitness-plan-backend:8080"))
-                .route("order-openapi", r -> r.path("/v3/api-docs/order-backend")
-                        .filters(f -> f.setPath("/v3/api-docs"))
-                        .uri("http://order-backend:8080"))
+                // ========== OpenAPI doc routes ==========
+                .route("identity-openapi", r -> r.path("/v3/api-docs/identity-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://identity-backend:8080"))
+                .route("catalog-openapi", r -> r.path("/v3/api-docs/catalog-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://catalog-backend:8080"))
+                .route("notifications-openapi", r -> r.path("/v3/api-docs/notifications-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://notifications-backend:8080"))
+                .route("payment-openapi", r -> r.path("/v3/api-docs/payment-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://payment-backend:8080"))
+                .route("support-openapi", r -> r.path("/v3/api-docs/support-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://support-backend:8080"))
+                .route("user-openapi", r -> r.path("/v3/api-docs/user-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://user-backend:8080"))
+                .route("fitness-plan-openapi", r -> r.path("/v3/api-docs/fitness-plan-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://fitness-plan-backend:8080"))
+                .route("order-openapi", r -> r.path("/v3/api-docs/order-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://order-backend:8080"))
                 .build();
     }
 
