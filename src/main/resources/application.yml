@@ -48,14 +48,12 @@ spring:
         connect-timeout: 2000
         response-timeout: 15s
       routes:
-        # ========== identity-backend ==========
-        - id: identity-backend
+        - id: test-shorthand-route
           uri: http://identity-backend:8080
           predicates:
-            - name: Path
-              args:
-                patterns:
-                  - /api/v1/identity/me
+            - Path=/api/test-shorthand/**
+          filters:
+            - StripPrefix=0
                   - /api/v1/me/change-email/request
                   - /api/v1/me/change-email/confirm
                   - /api/v1/me/change-mobile/request
@@ -555,9 +553,11 @@ springdoc:
 
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud: TRACE
     org.springframework.security: DEBUG
     az.fitnest.gateway: DEBUG
+    org.springframework.boot: DEBUG
 
 grpc:
   client:
