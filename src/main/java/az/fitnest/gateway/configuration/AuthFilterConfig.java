@@ -137,7 +137,7 @@ public class AuthFilterConfig {
                         .header("X-User-Id", validation.userId != null ? validation.userId.toString() : "")
                         .header("X-Tenant-Id", "")
                         .header("X-Scopes", scopes)
-                        .header("X-Service-Name", "api-gateway")
+                        .header("X-Service-Name", "gateway-backend")
                         .header("X-From-Gateway", "1")
                         .build())
                 .build();
@@ -148,7 +148,7 @@ public class AuthFilterConfig {
                 .request(exchange.getRequest().mutate()
                         .header("X-Client-IP", clientIP)
                         .header("X-Request-Id", UUID.randomUUID().toString())
-                        .header("X-Service-Name", "api-gateway")
+                        .header("X-Service-Name", "gateway-backend")
                         .header("X-From-Gateway", "1")
                         .build())
                 .build();
