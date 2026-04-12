@@ -253,7 +253,11 @@ spring:
         - id: fitness-plan-backend
           uri: http://fitness-plan-backend:8080   # ✅ Updated (assumed rename)
           predicates:
-            - Path=/api/v1/nutrition-plans/**,/api/v1/workout-plans/**
+            - name: Path
+              args:
+                patterns:
+                  - /api/v1/nutrition-plans/**
+                  - /api/v1/workout-plans/**
           filters:
             - StripPrefix=0
 
@@ -261,7 +265,11 @@ spring:
         - id: argocd
           uri: http://argocd-server.argocd.svc:8080
           predicates:
-            - Path=/api/v1/applications/**,/api/v1/stream/applications/**
+            - name: Path
+              args:
+                patterns:
+                  - /api/v1/applications/**
+                  - /api/v1/stream/applications/**
           filters:
             - StripPrefix=0
 
@@ -269,7 +277,17 @@ spring:
         - id: order-backend
           uri: http://order-backend:8080   # ✅ Updated
           predicates:
-            - Path=/api/v1/subscription-packages/**,/api/v1/me/subscriptions/**,/api/v1/subscriptions/upgrade/**,/api/v1/orders/**,/api/v1/admin/subscriptions/**,/api/v1/admin/plans/**,/api/v1/admin/subscription-packages/**,/admin/subscription/**
+            - name: Path
+              args:
+                patterns:
+                  - /api/v1/subscription-packages/**
+                  - /api/v1/me/subscriptions/**
+                  - /api/v1/subscriptions/upgrade/**
+                  - /api/v1/orders/**
+                  - /api/v1/admin/subscriptions/**
+                  - /api/v1/admin/plans/**
+                  - /api/v1/admin/subscription-packages/**
+                  - /admin/subscription/**
           filters:
             - StripPrefix=0
 
