@@ -24,7 +24,7 @@ dependencyManagement {
 }
 
 bootJar {
-    archiveFileName = "api-gateway.jar"
+    archiveFileName = "gateway-backend.jar"
 }
 
 dependencies {
