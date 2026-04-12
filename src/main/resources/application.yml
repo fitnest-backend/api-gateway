@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
   forward-headers-strategy: framework
   http2:
     enabled: ${SERVER_HTTP2_ENABLED:true}
@@ -13,12 +13,13 @@ spring:
     virtual:
       enabled: true
   application:
-    name: gateway-backend   # ✅ Changed from api-gateway
+    name: gateway-backend-live
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
     web-application-type: reactive
     lazy-initialization: ${SPRING_MAIN_LAZY_INITIALIZATION:false}
+    allow-bean-definition-overriding: true
   messages:
     encoding: UTF-8
   data:
@@ -49,7 +50,7 @@ spring:
       routes:
         # ========== identity-backend ==========
         - id: identity-backend
-          uri: http://identity-backend:8080   # ✅ Updated
+          uri: http://identity-backend:8080
           predicates:
             - name: Path
               args:
@@ -102,7 +103,7 @@ spring:
 
         # ========== catalog-backend ==========
         - id: catalog-backend
-          uri: http://catalog-backend:8080   # ✅ Updated
+          uri: http://catalog-backend:8080
           predicates:
             - name: Path
               args:
@@ -141,6 +142,7 @@ spring:
                   - /api/v1/gyms/{gymId}/qr
                   - /api/v1/gyms/{gymId}/trainers
                   - /api/v1/gyms/{gymId}/reviews
+                  - /api/v1/gyms/{image:\d+-\w+}
                   - /api/v1/gyms/{gymId}/reservation-rules
                   - /api/v1/gyms/{gymId}/location
                   - /api/v1/gyms/{gymId}/save
@@ -162,7 +164,7 @@ spring:
 
         # ========== notifications-backend ==========
         - id: notifications-backend
-          uri: http://notifications-backend:8080   # ✅ Updated
+          uri: http://notifications-backend:8080
           predicates:
             - name: Path
               args:
@@ -188,7 +190,7 @@ spring:
 
         # ========== payment-backend ==========
         - id: payment-backend
-          uri: http://payment-backend:8080   # ✅ Updated
+          uri: http://payment-backend:8080
           predicates:
             - name: Path
               args:
@@ -229,7 +231,7 @@ spring:
 
         # ========== support-backend ==========
         - id: support-backend
-          uri: http://support-backend:8080   # ✅ Updated
+          uri: http://support-backend:8080
           predicates:
             - name: Path
               args:
@@ -251,7 +253,7 @@ spring:
 
         # ========== fitness-plan-backend ==========
         - id: fitness-plan-backend
-          uri: http://fitness-plan-backend:8080   # ✅ Updated (assumed rename)
+          uri: http://fitness-plan-backend:8080
           predicates:
             - name: Path
               args:
@@ -261,7 +263,7 @@ spring:
           filters:
             - StripPrefix=0
 
-        # ========== argocd (unchanged) ==========
+        # ========== argocd ==========
         - id: argocd
           uri: http://argocd-server.argocd.svc:8080
           predicates:
@@ -275,7 +277,7 @@ spring:
 
         # ========== order-backend ==========
         - id: order-backend
-          uri: http://order-backend:8080   # ✅ Updated
+          uri: http://order-backend:8080
           predicates:
             - name: Path
               args:
@@ -293,7 +295,7 @@ spring:
 
         # ========== user-backend ==========
         - id: user-backend
-          uri: http://user-backend:8080   # ✅ Updated
+          uri: http://user-backend:8080
           predicates:
             - name: Path
               args:
@@ -331,7 +333,7 @@ spring:
             - StripPrefix=0
             - RequestRateLimiter=redisRateLimiter
 
-        # ========== OpenAPI routes (updated) ==========
+        # ========== OpenAPI routes ==========
         - id: identity-backend-openapi
           uri: http://identity-backend:8080
           predicates:
@@ -479,7 +481,7 @@ spring:
 resilience4j:
   circuitbreaker:
     instances:
-      identity-backend:   # ✅ Updated
+      identity-backend:
         registerHealthIndicator: true
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
@@ -488,7 +490,7 @@ resilience4j:
         waitDurationInOpenState: 10s
         failureRateThreshold: 50
         eventConsumerBufferSize: 10
-      storage-backend:   # ✅ Updated (assuming storage-service becomes storage-backend)
+      storage-backend:
         registerHealthIndicator: true
         slidingWindowSize: 10
         minimumNumberOfCalls: 5
@@ -559,7 +561,7 @@ logging:
 
 grpc:
   client:
-    catalog-backend:   # ✅ Updated
+    catalog-backend:
       address: 'dns:///catalog-backend.fitnest-dev.svc.cluster.local:9090'
       negotiation-type: plaintext
 
