@@ -78,6 +78,8 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/professions/{id}",
                         "/api/v1/admin/professions",
                         "/api/v1/admin/professions/all",
+                        "/api/v1/professions",
+                        "/api/v1/professions/{id}"
                         "/api/v1/admin/gyms/{id}/rooms",
                         "/api/v1/admin/gyms/{id}/rooms/{roomId}",
                         "/api/v1/admin/gyms/{id}/trainers",
