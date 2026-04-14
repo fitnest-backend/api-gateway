@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
         ApiError apiError = ApiError.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .code("BAD_REQUEST")
-                .message(getMessage(ex.getMessage()))
+                .message(getLocalizedMessage("BAD_REQUEST", ex.getMessage()))
                 .path(request.getDescription(false).replace("uri=", ""))
                 .timestamp(OffsetDateTime.now())
                 .build();
@@ -81,6 +81,32 @@ public class GlobalExceptionHandler {
                 .timestamp(OffsetDateTime.now())
                 .build();
         return ResponseEntity.status(ex.getStatusCode()).body(ApiResponse.error(apiError));
+    }
+
+    private String getLocalizedMessage(String errorCode, String defaultMessage) {
+        String key = "error." + errorCode.toLowerCase();
+        try {
+            return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+        } catch (org.springframework.context.NoSuchMessageException e1) {
+            try {
+                return messageSource.getMessage(errorCode, null, LocaleContextHolder.getLocale());
+            } catch (org.springframework.context.NoSuchMessageException e2) {
+                return safeMessage(defaultMessage);
+            }
+        }
+    }
+
+    private String safeMessage(String msg) {
+        if (msg == null || msg.isBlank()) {
+            return getMessage("error.server.internal");
+        }
+        if (msg.startsWith("error.")) {
+            String resolved = getMessage(msg);
+            if (!resolved.equals(msg)) {
+                return resolved;
+            }
+        }
+        return msg;
     }
 
     private String getMessage(String code) {

@@ -139,7 +139,7 @@ public class AuthFilterConfig {
                         .header("X-Scopes", scopes)
                         .header("X-Service-Name", "gateway-backend")
                         .header("X-From-Gateway", "1")
-                        .header("Accept-Language", validation.language != null ? validation.language : "az")
+                        .header("Accept-Language", RequestUtils.extractLanguage(exchange, validation.language))
                         .build())
                 .build();
     }
@@ -151,6 +151,7 @@ public class AuthFilterConfig {
                         .header("X-Request-Id", UUID.randomUUID().toString())
                         .header("X-Service-Name", "gateway-backend")
                         .header("X-From-Gateway", "1")
+                        .header("Accept-Language", RequestUtils.extractLanguage(exchange, null))
                         .build())
                 .build();
     }
