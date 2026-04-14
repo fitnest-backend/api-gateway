@@ -49,7 +49,7 @@ public class AuthFilterConfig {
             String token = RequestUtils.extractToken(sanitizedExchange);
             Mono<JwtProcessor.TokenValidationResult> validationMono = (token != null && !token.isEmpty())
                     ? jwtProcessor.validateToken(token)
-                    : Mono.just(new JwtProcessor.TokenValidationResult(false, null, null, null, null));
+                    : Mono.just(new JwtProcessor.TokenValidationResult(false, null, null, null, null, null));
 
             return validationMono.flatMap(validation -> {
                 String identifier = clientIP;
