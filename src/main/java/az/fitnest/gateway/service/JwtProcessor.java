@@ -55,14 +55,14 @@ public class JwtProcessor {
 
     private Mono<TokenValidationResult> validateTokenInternal(String token, boolean checkBlacklist, boolean checkSession) {
         if (token == null || token.isEmpty()) {
-            return Mono.just(new TokenValidationResult(false, null, null, null, null));
+            return Mono.just(new TokenValidationResult(false, null, null, null, null, null));
         }
 
         try {
             Claims claims = jwtParser.parseSignedClaims(token).getPayload();
 
             if (claims.getExpiration() != null && claims.getExpiration().before(new java.util.Date())) {
-                return Mono.just(new TokenValidationResult(false, null, null, null, null));
+                return Mono.just(new TokenValidationResult(false, null, null, null, null, null));
             }
 
             String subjectStr = claims.getSubject();
@@ -77,6 +77,7 @@ public class JwtProcessor {
             }
             final Long userId = parsedUserId;
 
+            final String language = claims.get("lang", String.class);
             final String email = claims.get("email", String.class);
             final String jti = claims.get("jti", String.class);
             @SuppressWarnings("unchecked") final List<String> roles = claims.get("roles", List.class);
@@ -86,36 +87,36 @@ public class JwtProcessor {
                 return redisTemplate.hasKey(blacklistKey)
                         .flatMap(isBlacklisted -> {
                             if (Boolean.TRUE.equals(isBlacklisted)) {
-                                return Mono.just(new TokenValidationResult(false, null, null, null, null));
+                                return Mono.just(new TokenValidationResult(false, null, null, null, null, null));
                             }
                             if (checkSession && userId != null && jti != null) {
-                                return validateSession(userId, jti, email, roles);
+                                return validateSession(userId, jti, email, roles, language);
                             }
-                            return Mono.just(new TokenValidationResult(true, email, userId, roles, jti));
+                            return Mono.just(new TokenValidationResult(true, email, userId, roles, jti, language));
                         });
             }
 
             if (checkSession && userId != null && jti != null) {
-                return validateSession(userId, jti, email, roles);
+                return validateSession(userId, jti, email, roles, language);
             }
 
-            return Mono.just(new TokenValidationResult(true, email, userId, roles, jti));
+            return Mono.just(new TokenValidationResult(true, email, userId, roles, jti, language));
 
         } catch (Exception e) {
-            return Mono.just(new TokenValidationResult(false, null, null, null, null));
+            return Mono.just(new TokenValidationResult(false, null, null, null, null, null));
         }
     }
 
-    private Mono<TokenValidationResult> validateSession(Long userId, String jti, String email, List<String> roles) {
+    private Mono<TokenValidationResult> validateSession(Long userId, String jti, String email, List<String> roles, String language) {
         String sessionKey = sessionPrefix + userId;
         return redisTemplate.opsForValue().get(sessionKey)
                 .map(activeJti -> {
                     if (jti.equals(activeJti)) {
-                        return new TokenValidationResult(true, email, userId, roles, jti);
+                        return new TokenValidationResult(true, email, userId, roles, jti, language);
                     }
-                    return new TokenValidationResult(false, null, null, null, null);
+                    return new TokenValidationResult(false, null, null, null, null, null);
                 })
-                .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null));
+                .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null, null));
     }
 
     public boolean isAdminRoute(String path) {
@@ -129,13 +130,15 @@ public class JwtProcessor {
         public final Long userId;
         public final List<String> roles;
         public final String jti;
+        public final String language;
 
-        public TokenValidationResult(boolean valid, String email, Long userId, List<String> roles, String jti) {
+        public TokenValidationResult(boolean valid, String email, Long userId, List<String> roles, String jti, String language) {
             this.valid = valid;
             this.email = email;
             this.userId = userId;
             this.roles = roles;
             this.jti = jti;
+            this.language = language;
         }
     }
 }

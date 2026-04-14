@@ -139,6 +139,7 @@ public class AuthFilterConfig {
                         .header("X-Scopes", scopes)
                         .header("X-Service-Name", "gateway-backend")
                         .header("X-From-Gateway", "1")
+                        .header("Accept-Language", validation.language != null ? validation.language : "az")
                         .build())
                 .build();
     }
