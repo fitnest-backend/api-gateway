@@ -67,6 +67,7 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/stores/{id}/logo",
                         "/api/v1/admin/stores/{id}/cover",
                         "/api/v1/admin/stores/all",
+                        "/api/v1/admin/stores/{id}/status",
                         "/api/v1/admin/gyms",
                         "/api/v1/admin/translations",
                         "/api/v1/admin/translations/{id}",
