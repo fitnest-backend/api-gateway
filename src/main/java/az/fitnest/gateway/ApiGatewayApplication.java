@@ -96,7 +96,7 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/reservations/{reservationId}/status",
                         "/api/v1/admin/reservations/gyms/{id}/lesson-types",
                         "/api/v1/admin/reservations/gyms/{id}/lesson-types/{lessonTypeId}",
-                        "/api/v1/admin/reservations/rules",
+                        "/api/v1/admin/reservations/gyms/{gymId}/categories/{categoryId}/rules",
                         "/api/v1/admin/categories",
                         "/api/v1/admin/categories/all",
                         "/api/v1/admin/categories/{id}",
