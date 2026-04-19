@@ -91,7 +91,7 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/gyms/{id}/cover",
                         "/api/v1/admin/gyms/all",
                         "/api/v1/admin/reservations/gyms/{id}/enable",
-                        "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/enable",
+                        "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/enable/{lessonId}",
                         "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/availabilities",
                         "/api/v1/admin/reservations/{reservationId}/status",
                         "/api/v1/admin/reservations/gyms/{id}/lesson-types",
