@@ -167,6 +167,7 @@ public class ApiGatewayApplication {
                         "/api/v1/me/cards/default",
                         "/api/v1/me/cards/{cardId}",
                         "/api/v1/me/cards",
+                        "/api/v1/admin/payments/user/{userId}",
                         "/api/heartbeat",
                         "/api/v1/me/payments/history/{transactionId}",
                         "/payment/result",
