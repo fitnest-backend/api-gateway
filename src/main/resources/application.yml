@@ -13,7 +13,7 @@ spring:
     virtual:
       enabled: true
   application:
-    name: gateway-backend-trace
+    name: gateway-backend
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
   main:
