@@ -14,7 +14,6 @@ public class ApiGatewayApplication {
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                // ========== identity-backend ==========
                 .route("identity-backend", r -> r.path(
                         "/api/v1/identity/me",
                         "/api/v1/me/change-email/request",
@@ -57,7 +56,6 @@ public class ApiGatewayApplication {
                         "/api/v1/internal/users/{userId}/session-status"
                 ).uri("http://identity-backend:8080"))
 
-                // ========== catalog-backend ==========
                 .route("catalog-backend", r -> r.path(
                         "/api/v1/admin/stores",
                         "/api/v1/admin/stores/{id}",
@@ -140,7 +138,6 @@ public class ApiGatewayApplication {
                         "/api/v1/media/stream/{fsId}"
                 ).uri("http://catalog-backend:8080"))
 
-                // ========== notifications-backend ==========
                 .route("notifications-backend", r -> r.path(
                         "/api/v1/notifications",
                         "/api/v1/notifications/{id}/read",
@@ -160,13 +157,13 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/devices/{deviceId}"
                 ).uri("http://notifications-backend:8080"))
 
-                // ========== payment-backend ==========
                 .route("payment-backend", r -> r.path(
                         "/api/v1/me/payments/history",
                         "/api/v1/me/cards/default",
                         "/api/v1/me/cards/{cardId}",
                         "/api/v1/me/cards",
                         "/api/v1/admin/payments/user/{userId}",
+                        "/api/v1/admin/payments/user/{userId}/history",
                         "/api/heartbeat",
                         "/api/v1/me/payments/history/{transactionId}",
                         "/payment/result",
@@ -196,7 +193,6 @@ public class ApiGatewayApplication {
                         "/payment/heartbeat"
                 ).uri("http://payment-backend:8080"))
 
-                // ========== support-backend ==========
                 .route("support-backend", r -> r.path(
                         "/api/v1/admin/faqs",
                         "/api/v1/admin/faqs/{id}",
@@ -212,13 +208,11 @@ public class ApiGatewayApplication {
                         "/api/v1/tickets/{id}"
                 ).uri("http://support-backend:8080"))
 
-                // ========== fitness-plan-backend ==========
                 .route("fitness-plan-backend", r -> r.path(
                         "/api/v1/nutrition-plans/**",
                         "/api/v1/workout-plans/**"
                 ).uri("http://fitness-plan-backend:8080"))
 
-                // ========== order-backend ==========
                 .route("order-backend", r -> r.path(
                         "/api/v1/subscription-packages/**",
                         "/api/v1/me/subscriptions/**",
@@ -230,7 +224,6 @@ public class ApiGatewayApplication {
                         "/admin/subscription/**"
                 ).uri("http://order-backend:8080"))
 
-                // ========== user-backend ==========
                 .route("user-backend", r -> r.path(
                         "/api/v1/admin/goals",
                         "/api/v1/admin/goals/{code}",
@@ -266,11 +259,9 @@ public class ApiGatewayApplication {
                         "/api/v1/me/profile/images/{fsId}"
                 ).uri("http://user-backend:8080"))
 
-                // ========== argocd ==========
                 .route("argocd", r -> r.path("/api/v1/applications/**", "/api/v1/stream/applications/**")
                         .uri("http://argocd-server.argocd.svc:8080"))
 
-                // ========== OpenAPI doc routes ==========
                 .route("identity-openapi", r -> r.path("/v3/api-docs/identity-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://identity-backend:8080"))
                 .route("catalog-openapi", r -> r.path("/v3/api-docs/catalog-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://catalog-backend:8080"))
                 .route("notifications-openapi", r -> r.path("/v3/api-docs/notifications-backend").filters(f -> f.setPath("/v3/api-docs")).uri("http://notifications-backend:8080"))

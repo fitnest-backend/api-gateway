@@ -49,25 +49,20 @@ public class RequestUtils {
     }
 
     public static String extractLanguage(ServerWebExchange exchange, String tokenLang) {
-        // 1. Check query parameter 'lang' - highest priority
         String queryLang = exchange.getRequest().getQueryParams().getFirst("lang");
         if (queryLang != null && !queryLang.isEmpty()) {
             return queryLang.toLowerCase();
         }
 
-        // 2. Use token language if provided (e.g. from JWT lang claim)
         if (tokenLang != null && !tokenLang.isEmpty()) {
             return tokenLang.toLowerCase();
         }
 
-        // 3. Fallback to existing Accept-Language header from client
         String headerLang = exchange.getRequest().getHeaders().getFirst("Accept-Language");
         if (headerLang != null && !headerLang.isEmpty()) {
-            // Take only the primary language tag (e.g., "en-US,en;q=0.9" -> "en")
             return headerLang.split(",")[0].split("-")[0].split(";")[0].trim().toLowerCase();
         }
 
-        // 4. Final default
         return "az";
     }
 }
