@@ -87,6 +87,7 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/gyms/reviews/{reviewId}/approve",
                         "/api/v1/admin/gyms/reviews/{reviewId}/reject",
                         "/api/v1/admin/gyms/{id}/cover",
+                        "/api/v1/admin/gyms/users/{userId}/qr-history",
                         "/api/v1/admin/gyms/all",
                         "/api/v1/admin/reservations/gyms/{id}/enable",
                         "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/enable/{lessonId}",
