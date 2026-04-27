@@ -136,7 +136,8 @@ public class ApiGatewayApplication {
                         "/api/v1/stores/{storeId}",
                         "/api/v1/stores/{storeId}/location",
                         "/api/v1/stores/{storeId}/save",
-                        "/api/v1/media/stream/{fsId}"
+                        "/api/v1/media/stream/{fsId}",
+                        "/api/v1/catalog/gyms"
                 ).uri("http://catalog-backend:8080"))
 
                 .route("notifications-backend", r -> r.path(
@@ -257,7 +258,8 @@ public class ApiGatewayApplication {
                         "/api/v1/me/setup/complete",
                         "/api/v1/me/setup/skip",
                         "/api/v1/me/fitness-level",
-                        "/api/v1/me/profile/images/{fsId}"
+                        "/api/v1/me/profile/images/{fsId}",
+                        "/api/v1/users/profile"
                 ).uri("http://user-backend:8080"))
 
                 .route("argocd", r -> r.path("/api/v1/applications/**", "/api/v1/stream/applications/**")
