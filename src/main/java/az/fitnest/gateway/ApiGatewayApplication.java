@@ -102,6 +102,8 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/enable/{lessonId}",
                         "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/lessons/{lessonId}/availabilities",
                         "/api/v1/admin/reservations/{reservationId}/status",
+                        "/api/v1/admin/reservations/{reservationId}/approve",
+                        "/api/v1/admin/reservations/{reservationId}/reject",
                         "/api/v1/admin/reservations/gyms/{id}/lesson-types",
                         "/api/v1/admin/reservations/gyms/{id}/lesson-types/{lessonTypeId}",
                         "/api/v1/admin/reservations/gyms/{gymId}/categories/{categoryId}/lessons/{lessonId}/rules",
