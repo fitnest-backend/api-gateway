@@ -99,6 +99,7 @@ public class ApiGatewayApplication {
                         "/api/v1/admin/gyms/reviews/pending",
                         "/api/v1/admin/gyms/reviews/{reviewId}/approve",
                         "/api/v1/admin/gyms/reviews/{reviewId}/reject",
+                        "/api/v1/admin/gyms/{id}/status",
                         "/api/v1/admin/gyms/{id}/cover",
                         "/api/v1/admin/gyms/users/{userId}/qr-history",
                         "/api/v1/admin/gyms/geocoding/reverse",
