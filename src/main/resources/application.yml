@@ -27,6 +27,8 @@ spring:
       port: ${SPRING_DATA_REDIS_PORT:${REDIS_PORT:6379}}
       password: ${SPRING_DATA_REDIS_PASSWORD:}
       timeout: ${SPRING_DATA_REDIS_TIMEOUT:${REDIS_TIMEOUT:2000ms}}
+  codec:
+    max-in-memory-size: 50MB
 
   cloud:
     gateway:
