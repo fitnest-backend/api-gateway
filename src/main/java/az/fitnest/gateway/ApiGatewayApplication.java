@@ -100,6 +100,8 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/gyms/{id}/trainers/{trainerId}/photo",
                                                 "/api/v1/admin/gyms/{id}/admins",
                                                 "/api/v1/admin/gyms/{id}/admins/{adminId}",
+                                                "/api/v1/admin/gyms/{id}/reviews",
+                                                "/api/v1/admin/gyms/reviews/{reviewId}",
                                                 "/api/v1/admin/gyms/reviews/pending",
                                                 "/api/v1/admin/gyms/reviews/{reviewId}/approve",
                                                 "/api/v1/admin/gyms/reviews/{reviewId}/reject",
