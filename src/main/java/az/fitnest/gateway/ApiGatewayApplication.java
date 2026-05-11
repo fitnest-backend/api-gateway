@@ -244,6 +244,15 @@ public class ApiGatewayApplication {
                                                 "/api/v1/orders/**",
                                                 "/api/v1/admin/subscriptions/**",
                                                 "/api/v1/admin/plans/**",
+                                                "/api/v1/admin/subscription-packages",
+                                                "/api/v1/admin/subscription-packages/paged",
+                                                "/api/v1/admin/subscription-packages/names",
+                                                "/api/v1/admin/subscription-packages/options",
+                                                "/api/v1/admin/subscription-packages/{packageId}",
+                                                "/api/v1/admin/subscription-packages/{packageId}/options",
+                                                "/api/v1/admin/subscription-packages/{packageId}/options/{optionId}",
+                                                "/api/v1/admin/subscription-packages/{packageId}/options/{optionId}/status",
+                                                "/api/v1/admin/subscription-packages/basic",
                                                 "/api/v1/admin/subscription-packages/**",
                                                 "/admin/subscription/**").uri("http://order-backend:8080"))
 
