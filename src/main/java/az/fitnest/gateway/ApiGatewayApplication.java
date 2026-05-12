@@ -130,6 +130,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/categories/{categoryId}/name",
                                                 "/api/v1/admin/categories/{categoryId}/photo",
                                                 "/api/v1/admin/categories/{categoryId}/icon",
+                                                "/api/v1/admin/lesson-types",
                                                 "/api/v1/categories",
                                                 "/api/v1/gyms/{gymId}",
                                                 "/api/v1/gyms/{gymId}/images",
