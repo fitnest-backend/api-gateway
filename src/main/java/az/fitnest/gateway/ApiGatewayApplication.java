@@ -58,6 +58,7 @@ public class ApiGatewayApplication {
 
                                 .route("catalog-backend", r -> r.path(
                                                 "/api/v1/admin/stores",
+                                                "/api/v1/admin/stores/{id}",
                                                 "/api/v1/admin/stores/step1",
                                                 "/api/v1/admin/stores/{id}/step2",
                                                 "/api/v1/admin/stores/{id}/step3",
