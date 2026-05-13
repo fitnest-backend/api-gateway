@@ -120,6 +120,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/gyms/{id}/lesson-hours",
                                                 "/api/v1/admin/gyms/users/{userId}/qr-history",
                                                 "/api/v1/admin/gyms/geocoding/reverse",
+                                                "/api/v1/admin/gyms/geocoding/forward",
                                                 "/api/v1/admin/gyms/all",
                                                 "/api/v1/admin/reservations/gyms/{id}/enable",
                                                 "/api/v1/admin/reservations/gyms/{id}/trainers/{trainerId}/enable/{lessonId}",
