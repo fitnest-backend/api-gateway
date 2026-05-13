@@ -191,7 +191,10 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/devices",
                                                 "/api/v1/admin/devices/user/{userId}",
                                                 "/api/v1/admin/devices/send",
-                                                "/api/v1/admin/devices/{deviceId}")
+                                                "/api/v1/admin/devices/{deviceId}",
+                                                "/api/v1/admin/notifications/bulk",
+                                                "/api/v1/admin/notifications/sms/bulk",
+                                                "/api/v1/admin/notifications/email/bulk")
                                                 .uri("http://notifications-backend:8080"))
 
                                 .route("payment-backend", r -> r.path(
