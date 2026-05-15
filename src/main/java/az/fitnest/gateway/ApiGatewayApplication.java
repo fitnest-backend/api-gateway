@@ -276,6 +276,8 @@ public class ApiGatewayApplication {
 
                                 .route("user-backend", r -> r.path(
                                                 "/api/v1/admin/goals",
+                                                "/api/v1/admin/dashboard/kpi-summary",
+                                                "/api/v1/admin/dashboard/customer-growth",
                                                 "/api/v1/admin/goals/{code}",
                                                 "/api/v1/admin/goals/{code}/image",
                                                 "/api/v1/bmi/calculate",
