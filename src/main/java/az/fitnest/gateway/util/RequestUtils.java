@@ -54,13 +54,13 @@ public class RequestUtils {
             return queryLang.toLowerCase();
         }
 
-        if (tokenLang != null && !tokenLang.isEmpty()) {
-            return tokenLang.toLowerCase();
-        }
-
         String headerLang = exchange.getRequest().getHeaders().getFirst("Accept-Language");
         if (headerLang != null && !headerLang.isEmpty()) {
             return headerLang.split(",")[0].split("-")[0].split(";")[0].trim().toLowerCase();
+        }
+
+        if (tokenLang != null && !tokenLang.isEmpty()) {
+            return tokenLang.toLowerCase();
         }
 
         return "az";
