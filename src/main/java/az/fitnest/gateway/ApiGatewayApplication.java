@@ -33,6 +33,8 @@ public class ApiGatewayApplication {
                                                 "/api/v1/auth/registration/register/complete",
                                                 "/api/v1/auth/password-recovery/forgot-password",
                                                 "/api/v1/auth/password-recovery/reset-password",
+                                                "/api/v1/auth/password-recovery/admin/forgot-password",
+                                                "/api/v1/auth/password-recovery/admin/reset-password",
                                                 "/api/v1/auth/otp/verify",
                                                 "/api/v1/auth/otp/registration/register/resend",
                                                 "/api/v1/legal/privacy-policy",
