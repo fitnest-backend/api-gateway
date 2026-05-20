@@ -283,7 +283,6 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/dashboard/kpi-summary",
                                                 "/api/v1/admin/dashboard/customer-growth",
                                                 "/api/v1/admin/goals/{code}",
-                                                "/api/v1/admin/goals/{code}/image",
                                                 "/api/v1/bmi/calculate",
                                                 "/api/v1/recent-searches",
                                                 "/api/v1/recent-searches/all",
