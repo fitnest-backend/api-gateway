@@ -213,6 +213,8 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/payments/user/{userId}/history",
                                                 "/api/heartbeat",
                                                 "/api/v1/me/payments/history/{transactionId}",
+                                                "/api/v1/payments/google-pay/create",
+                                                "/api/v1/payments/google-pay/submit",
                                                 "/payment/result",
                                                 "/payment/callback",
                                                 "/payment/epoint/callback",
