@@ -51,6 +51,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/users/otp-rate-limit/reset-all",
                                                 "/api/v1/admin/users/{userId}/block",
                                                 "/api/v1/admin/users/{userId}/unblock",
+                                                "/api/v1/admin/users/{userId}/password/reset",
                                                 "/api/v1/admin/roles",
                                                 "/api/v1/admin/roles/{roleId}",
                                                 "/api/v1/internal/users/{userId}",
