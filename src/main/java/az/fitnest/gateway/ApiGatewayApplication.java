@@ -81,6 +81,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/gyms/list",
                                                 "/api/v1/admin/gyms",
                                                 "/api/v1/admin/gyms/step1",
+                                                "/api/v1/admin/gyms/create-complete",
                                                 "/api/v1/admin/gyms/{id}/step2",
                                                 "/api/v1/admin/gyms/{id}/step3",
                                                 "/api/v1/admin/gyms/{id}/step4",
@@ -242,6 +243,7 @@ public class ApiGatewayApplication {
                                                 "/payment/invoice/list",
                                                 "/payment/invoice/send-sms/{id}",
                                                 "/payment/invoice/send-email/{id}",
+                                                "/payment/redirect/**",
                                                 "/payment/heartbeat").uri("http://payment-backend:8080"))
 
                                 .route("support-backend", r -> r.path(
