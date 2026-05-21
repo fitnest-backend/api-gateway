@@ -8,6 +8,11 @@ public class PathValidator {
 
     private static final Set<String> AUTH_REQUIRED_PATHS = Set.of();
 
+    private static final Set<String> AUTH_EXEMPT_PATHS = Set.of(
+            "/api/v1/auth/password-recovery/admin/forgot-password",
+            "/api/v1/auth/password-recovery/admin/reset-password"
+    );
+
     private PathValidator() {
     }
 
@@ -21,6 +26,10 @@ public class PathValidator {
     }
 
     public static boolean requiresAuth(String path) {
+        if (AUTH_EXEMPT_PATHS.contains(path)) {
+            return false;
+        }
+
         if (path.startsWith("/api/v1/goals/images/")) {
             return false;
         }
