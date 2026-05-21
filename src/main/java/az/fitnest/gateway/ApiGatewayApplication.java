@@ -103,6 +103,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/translations",
                                                 "/api/v1/admin/translations/{id}",
                                                 "/api/v1/admin/gyms/{id}",
+                                                "/api/v1/admin/gyms/{id}/qr",
                                                 "/api/v1/admin/gyms/{id}/subscriptions",
                                                 "/api/v1/admin/gyms/{id}/subscriptions/{subscriptionId}",
                                                 "/api/v1/admin/gyms/{id}/subscriptions/enable",
