@@ -100,6 +100,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/gyms/{id}/history",
                                                 "/api/v1/admin/gyms/{id}/analytics",
                                                 "/api/v1/admin/gyms/{id}/details",
+                                                "/api/v1/admin/gyms/{id}/work-hours",
                                                 "/api/v1/admin/translations",
                                                 "/api/v1/admin/translations/{id}",
                                                 "/api/v1/admin/gyms/{id}",
