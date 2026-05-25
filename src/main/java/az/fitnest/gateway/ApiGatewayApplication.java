@@ -143,6 +143,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/reservations/gyms/{id}/lesson-types",
                                                 "/api/v1/admin/reservations/gyms/{id}/lesson-types/{lessonTypeId}",
                                                 "/api/v1/admin/reservations/gyms/{gymId}/categories/{categoryId}/lessons/{lessonId}/rules",
+                                                "/api/v1/admin/reservations/gyms/{gymId}/rules",
                                                 "/api/v1/admin/reservations/cancel-reasons",
                                                 "/api/v1/admin/reservations/cancel-reasons/{code}",
                                                 "/api/v1/admin/categories",
