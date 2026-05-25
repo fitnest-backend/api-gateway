@@ -108,15 +108,21 @@ public class JwtProcessor {
     }
 
     private Mono<TokenValidationResult> validateSession(Long userId, String jti, String email, List<String> roles, String language) {
-        String sessionKey = sessionPrefix + userId;
-        return redisTemplate.opsForValue().get(sessionKey)
-                .map(activeJti -> {
-                    if (jti.equals(activeJti)) {
+        String webKey = sessionPrefix + userId + ":web";
+        String mobileKey = sessionPrefix + userId + ":mobile";
+
+        Mono<String> webJtiMono = redisTemplate.opsForValue().get(webKey).defaultIfEmpty("");
+        Mono<String> mobileJtiMono = redisTemplate.opsForValue().get(mobileKey).defaultIfEmpty("");
+
+        return Mono.zip(webJtiMono, mobileJtiMono)
+                .map(tuple -> {
+                    String webJti = tuple.getT1();
+                    String mobileJti = tuple.getT2();
+                    if (jti.equals(webJti) || jti.equals(mobileJti)) {
                         return new TokenValidationResult(true, email, userId, roles, jti, language);
                     }
                     return new TokenValidationResult(false, null, null, null, null, null);
-                })
-                .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null, null));
+                });
     }
 
     public boolean isAdminRoute(String path) {
