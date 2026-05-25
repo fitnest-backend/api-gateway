@@ -26,9 +26,12 @@ public class RequestUtils {
     }
 
     public static String extractToken(ServerWebExchange exchange) {
-        var accessTokenCookie = exchange.getRequest().getCookies().getFirst("accessToken");
-        if (accessTokenCookie != null && !accessTokenCookie.getValue().isEmpty()) {
-            return accessTokenCookie.getValue();
+        String[] cookieNames = {"fn_admin_access_token", "fn_user_access_token", "accessToken", "access_token"};
+        for (String name : cookieNames) {
+            var cookie = exchange.getRequest().getCookies().getFirst(name);
+            if (cookie != null && !cookie.getValue().isEmpty()) {
+                return cookie.getValue();
+            }
         }
 
         String authHeader = exchange.getRequest().getHeaders().getFirst("Authorization");
