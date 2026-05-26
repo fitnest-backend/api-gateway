@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class ApiGatewayApplication {
+    // Trigger CI/CD rebuild and deployment to expose new reservation admin endpoints
 
         @Bean
         public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
