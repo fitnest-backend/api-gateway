@@ -196,6 +196,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/catalog/gyms").uri("http://catalog-backend:8080"))
 
                                 .route("notifications-backend", r -> r.path(
+                                                "/api/v1/notifications/unread-count",
                                                 "/api/v1/notifications",
                                                 "/api/v1/notifications/{id}/read",
                                                 "/api/v1/notifications/read-all",
