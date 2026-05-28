@@ -22,6 +22,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/me/change-mobile/request",
                                                 "/api/v1/me/change-mobile/confirm",
                                                 "/api/v1/me/change-password",
+                                                "/api/v1/me/password-eligibility",
                                                 "/api/v1/me/delete-account",
                                                 "/api/v1/me/change-email/resend",
                                                 "/api/v1/me/change-mobile/resend",
