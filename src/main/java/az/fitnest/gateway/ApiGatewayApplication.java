@@ -232,6 +232,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/payments/apple-pay/create",
                                                 "/api/v1/payments/apple-pay/submit",
                                                 "/api/v1/payments/apple-pay/session",
+                                                "/api/v1/payment/with-card",
                                                 "/payment/result",
                                                 "/payment/callback",
                                                 "/payment/epoint/callback",
