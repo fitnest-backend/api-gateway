@@ -197,7 +197,7 @@ public class ApiGatewayApplication {
 
                                 .route("storage-backend", r -> r.path(
                                                 "/api/v1/media/stream/{fsId}")
-                                                .uri("http://storage-backend:9090"))
+                                                .uri("http://storage-backend:8080"))
 
                                 .route("notifications-backend", r -> r.path(
                                                 "/api/v1/notifications/unread-count",
