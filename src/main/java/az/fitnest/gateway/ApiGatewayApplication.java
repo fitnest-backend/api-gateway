@@ -193,8 +193,11 @@ public class ApiGatewayApplication {
                                                 "/api/v1/stores/{storeId}",
                                                 "/api/v1/stores/{storeId}/location",
                                                 "/api/v1/stores/{storeId}/save",
-                                                "/api/v1/media/stream/{fsId}",
                                                 "/api/v1/catalog/gyms").uri("http://catalog-backend:8080"))
+
+                                .route("storage-backend", r -> r.path(
+                                                "/api/v1/media/stream/{fsId}")
+                                                .uri("http://storage-backend:9090"))
 
                                 .route("notifications-backend", r -> r.path(
                                                 "/api/v1/notifications/unread-count",
