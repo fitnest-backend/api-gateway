@@ -117,6 +117,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/professions/{id}",
                                                 "/api/v1/admin/gyms/{id}/rooms",
                                                 "/api/v1/admin/gyms/{id}/rooms/{roomId}",
+                                                "/api/v1/admin/gyms/{id}/rooms/{roomId}/name",
                                                 "/api/v1/admin/gyms/{id}/rooms/images/{imageId}",
                                                 "/api/v1/admin/gyms/{id}/trainers",
                                                 "/api/v1/admin/gyms/{id}/trainers/{trainerId}",
