@@ -225,13 +225,14 @@ public class ApiGatewayApplication {
 
                                 .route("payment-backend", r -> r.path(
                                                 "/api/v1/me/payments/history",
+                                                "/api/v1/me/payments/history/{transactionId}",
+                                                "/api/v1/me/payments/order/{orderId}",
                                                 "/api/v1/me/cards/default",
                                                 "/api/v1/me/cards/{cardId}",
                                                 "/api/v1/me/cards",
                                                 "/api/v1/admin/payments/user/{userId}",
                                                 "/api/v1/admin/payments/user/{userId}/history",
                                                 "/api/heartbeat",
-                                                "/api/v1/me/payments/history/{transactionId}",
                                                 "/api/v1/payments/google-pay/create",
                                                 "/api/v1/payments/google-pay/submit",
                                                 "/api/v1/payments/apple-pay/create",
