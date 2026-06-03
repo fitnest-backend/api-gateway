@@ -108,15 +108,32 @@ public class JwtProcessor {
     }
 
     private Mono<TokenValidationResult> validateSession(Long userId, String jti, String email, List<String> roles, String language) {
-        String sessionKey = sessionPrefix + userId;
-        return redisTemplate.opsForValue().get(sessionKey)
-                .map(activeJti -> {
-                    if (jti.equals(activeJti)) {
-                        return new TokenValidationResult(true, email, userId, roles, jti, language);
+        String mobileSessionKey = sessionPrefix + userId + ":mobile";
+        String webSessionKey = sessionPrefix + userId + ":web";
+        String legacySessionKey = sessionPrefix + userId;
+
+        return redisTemplate.opsForValue().get(mobileSessionKey)
+                .switchIfEmpty(Mono.just(""))
+                .flatMap(activeMobileJti -> {
+                    if (jti.equals(activeMobileJti)) {
+                        return Mono.just(new TokenValidationResult(true, email, userId, roles, jti, language));
                     }
-                    return new TokenValidationResult(false, null, null, null, null, null);
-                })
-                .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null, null));
+                    return redisTemplate.opsForValue().get(webSessionKey)
+                            .switchIfEmpty(Mono.just(""))
+                            .flatMap(activeWebJti -> {
+                                if (jti.equals(activeWebJti)) {
+                                    return Mono.just(new TokenValidationResult(true, email, userId, roles, jti, language));
+                                }
+                                return redisTemplate.opsForValue().get(legacySessionKey)
+                                        .map(activeLegacyJti -> {
+                                            if (jti.equals(activeLegacyJti)) {
+                                                return new TokenValidationResult(true, email, userId, roles, jti, language);
+                                            }
+                                            return new TokenValidationResult(false, null, null, null, null, null);
+                                        })
+                                        .defaultIfEmpty(new TokenValidationResult(false, null, null, null, null, null));
+                            });
+                });
     }
 
     public boolean isAdminRoute(String path) {
