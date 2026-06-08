@@ -61,6 +61,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/users/{userId}/block",
                                                 "/api/v1/admin/users/{userId}/unblock",
                                                 "/api/v1/admin/users/{userId}/password/reset",
+                                                "/api/v1/admin/users/{userId}/change-role",
                                                 "/api/v1/admin/roles",
                                                 "/api/v1/admin/roles/{roleId}",
                                                 "/api/v1/internal/users/{userId}",
