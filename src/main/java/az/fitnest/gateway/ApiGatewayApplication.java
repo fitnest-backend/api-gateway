@@ -29,6 +29,7 @@ public class ApiGatewayApplication {
                                                 "/api/v2/auth/login",
                                                 "/api/v3/auth/login",
                                                 "/api/v3/auth/login/verify",
+                                                "/api/v3/auth/login/check",
                                                 "/api/v2/auth/social/google",
                                                 "/api/v2/auth/social/apple",
                                                 "/api/v2/auth/registration/register/complete",
