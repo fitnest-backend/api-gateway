@@ -119,6 +119,7 @@ public class ApiGatewayApplication {
                                                 "/api/v1/admin/gyms/validate/step7",
                                                 "/api/v1/admin/gyms/services",
                                                 "/api/v1/admin/gyms/services/{id}",
+                                                "/api/v1/admin/gyms/history",
                                                 "/api/v1/admin/gyms/{id}/history",
                                                 "/api/v1/admin/gyms/{id}/analytics",
                                                 "/api/v1/admin/gyms/{id}/details",
