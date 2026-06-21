@@ -57,6 +57,8 @@ public class ApiGatewayApplication {
                                         "/api/v1/admin/legal/consents",
                                         "/api/v1/admin/users/{userId}/role",
                                         "/api/v1/admin/users/{userId}/hard-delete",
+                                        "/api/v1/admin/users/{userId}/device-limit/reset",
+                                        "/api/v1/admin/users/device-limit/reset-all",
                                         "/api/v1/admin/users/rate-limit/reset",
                                         "/api/v1/admin/users/otp-rate-limit/reset",
                                         "/api/v1/admin/users/otp-rate-limit/reset-all",
