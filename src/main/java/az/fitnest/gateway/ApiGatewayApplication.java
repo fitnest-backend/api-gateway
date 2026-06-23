@@ -324,6 +324,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/subscription-packages",
                                 "/api/v1/admin/subscription-packages/paged",
                                 "/api/v1/admin/subscription-packages/names",
+                                "/api/v1/admin/subscription-packages/ids",
                                 "/api/v1/admin/subscription-packages/options",
                                 "/api/v1/admin/subscription-packages/{packageId}",
                                 "/api/v1/admin/subscription-packages/{packageId}/options",
