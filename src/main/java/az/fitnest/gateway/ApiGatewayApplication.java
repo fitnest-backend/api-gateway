@@ -76,6 +76,8 @@ public class ApiGatewayApplication {
                                 .uri("http://identity-backend:8080"))
 
                         .route("catalog-backend", r -> r.path(
+                                "/api/v1/admin/reports/qr-scans",
+                                "/api/v1/admin/reports/gym-payments",
                                 "/api/v1/admin/stores",
                                 "/api/v1/admin/stores/{id}",
                                 "/api/v1/admin/stores/step1",
@@ -251,6 +253,7 @@ public class ApiGatewayApplication {
                                 .uri("http://notifications-backend:8080"))
 
                         .route("payment-backend", r -> r.path(
+                                "/api/v1/admin/reports/income",
                                 "/api/v1/me/payments/history",
                                 "/api/v1/me/payments/history/{transactionId}",
                                 "/api/v1/me/payments/order/{orderId}",
@@ -315,6 +318,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/workout-plans/**").uri("http://fitness-plan-backend:8080"))
 
                         .route("order-backend", r -> r.path(
+                                "/api/v1/admin/reports/subscriptions",
                                 "/api/v1/subscription-packages/**",
                                 "/api/v1/me/subscriptions/**",
                                 "/api/v1/subscriptions/upgrade/**",
@@ -333,8 +337,9 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/subscription-packages/basic",
                                 "/api/v1/admin/subscription-packages/**",
                                 "/admin/subscription/**").uri("http://order-backend:8080"))
-
+ 
                         .route("user-backend", r -> r.path(
+                                "/api/v1/admin/reports/users",
                                 "/api/v1/admin/goals",
                                 "/api/v1/admin/dashboard/kpi-summary",
                                 "/api/v1/admin/dashboard/customer-growth",
