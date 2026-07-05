@@ -361,6 +361,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/languages",
                                 "/api/v1/languages/{code}",
                                 "/api/v1/translations",
+                                "/api/v1/translations/bulk",
                                 "/api/v1/translations/{entityType}/{entityId}",
                                 "/api/v1/admin/users",
                                 "/api/v1/admin/users/{userId}",
