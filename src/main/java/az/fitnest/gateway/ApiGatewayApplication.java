@@ -302,6 +302,7 @@ public class ApiGatewayApplication {
                                 "/payment/invoice/list",
                                 "/payment/invoice/send-sms/{id}",
                                 "/payment/invoice/send-email/{id}",
+                                "/payment/abb/**",
                                 "/payment/redirect/**",
                                 "/payment/heartbeat").uri("http://payment-backend:8080"))
 

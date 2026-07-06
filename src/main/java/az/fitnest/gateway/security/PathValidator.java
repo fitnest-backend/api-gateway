@@ -6,7 +6,10 @@ public class PathValidator {
 
     private static final Set<String> CSRF_EXEMPTED_PATHS = Set.of();
 
-    private static final Set<String> AUTH_REQUIRED_PATHS = Set.of();
+    private static final Set<String> AUTH_REQUIRED_PATHS = Set.of(
+            "/payment/abb/init",
+            "/payment/abb/installment"
+    );
 
     private static final Set<String> AUTH_EXEMPT_PATHS = Set.of(
             "/api/v1/auth/password-recovery/admin/forgot-password",
