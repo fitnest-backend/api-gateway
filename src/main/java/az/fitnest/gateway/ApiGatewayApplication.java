@@ -302,7 +302,15 @@ public class ApiGatewayApplication {
                                 "/payment/invoice/list",
                                 "/payment/invoice/send-sms/{id}",
                                 "/payment/invoice/send-email/{id}",
-                                "/payment/abb/**",
+                                "/payment/abb/init",
+                                "/payment/abb/installment",
+                                "/payment/abb/callback",
+                                "/payment/abb/redirect/success",
+                                "/payment/abb/redirect/error",
+                                "/payment/abb/action/complete",
+                                "/payment/abb/action/reverse-online",
+                                "/payment/abb/action/reverse-offline",
+                                "/payment/abb/action/status/{orderId}",
                                 "/payment/redirect/**",
                                 "/payment/heartbeat").uri("http://payment-backend:8080"))
 
