@@ -167,6 +167,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/gyms/{id}/lesson-hours",
                                 "/api/v1/admin/gyms/{id}/lesson-hours/archive",
                                 "/api/v1/admin/gyms/lesson-hours/{lessonHourId}",
+                                "/api/v1/admin/gyms/lesson-hours/{lessonHourId}/reservation-counts",
                                 "/api/v1/admin/gyms/{id}/reservations",
                                 "/api/v1/admin/gyms/{id}/reservations/stats",
                                 "/api/v1/admin/gyms/reservations/{reservationId}",
