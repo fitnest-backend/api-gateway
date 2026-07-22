@@ -262,6 +262,9 @@ public class ApiGatewayApplication {
 
                         .route("payment-backend", r -> r.path(
                                 "/api/v1/admin/reports/income",
+                                "/api/v1/admin/reports/analytics",
+                                "/api/v1/admin/transfers/request",
+                                "/api/v1/admin/transfers/history",
                                 "/api/v1/me/payments/history",
                                 "/api/v1/me/payments/history/{transactionId}",
                                 "/api/v1/me/payments/order/{orderId}",
