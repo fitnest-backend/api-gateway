@@ -8,7 +8,9 @@ public class PathValidator {
 
     private static final Set<String> AUTH_REQUIRED_PATHS = Set.of(
             "/payment/abb/init",
-            "/payment/abb/installment"
+            "/payment/abb/installment",
+            "/payment/bob/init",
+            "/payment/bob/pay-with-card"
     );
 
     private static final Set<String> AUTH_EXEMPT_PATHS = Set.of(

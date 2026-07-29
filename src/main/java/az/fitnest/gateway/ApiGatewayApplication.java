@@ -316,6 +316,8 @@ public class ApiGatewayApplication {
                                 "/payment/abb/action/reverse-online",
                                 "/payment/abb/action/reverse-offline",
                                 "/payment/abb/action/status/{orderId}",
+                                "/payment/abb/**",
+                                "/payment/bob/**",
                                 "/payment/redirect/**",
                                 "/payment/heartbeat").uri("http://payment-backend:8080"))
 
