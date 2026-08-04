@@ -80,6 +80,11 @@ public class ApiGatewayApplication {
                                 .uri("http://identity-backend:8080"))
 
                         .route("catalog-backend", r -> r.path(
+                                "/api/v1/admin/reports/app-qr-scans",
+                                "/api/v1/public/app-qr/scan/light",
+                                "/api/v1/public/app-qr/scan/dark",
+                                "/api/v1/public/app-qr/image/light",
+                                "/api/v1/public/app-qr/image/dark",
                                 "/api/v1/admin/reports/qr-scans",
                                 "/api/v1/admin/reports/gym-payments",
                                 "/api/v1/admin/stores",
