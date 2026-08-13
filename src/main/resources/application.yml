@@ -81,8 +81,8 @@ springdoc:
 logging:
   level:
     root: INFO
-    org.springframework.cloud.gateway: TRACE
-    org.springframework.cloud: TRACE
-    org.springframework.security: DEBUG
-    org.springframework.boot: DEBUG
-    az.fitnest.gateway: DEBUG
+    org.springframework.cloud.gateway: WARN
+    org.springframework.cloud: WARN
+    org.springframework.security: WARN
+    org.springframework.boot: WARN
+    az.fitnest.gateway: INFO
