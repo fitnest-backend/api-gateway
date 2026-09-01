@@ -281,6 +281,8 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/payments/order/{orderId}",
                                 "/api/v1/admin/payments/transaction/{transactionId}",
                                 "/api/v1/admin/payments/user/{userId}/history",
+                                "/api/v1/coins/**",
+                                "/api/v1/admin/coins/**",
                                 "/api/heartbeat",
                                 "/api/v1/payments/google-pay/create",
                                 "/api/v1/payments/google-pay/submit",
@@ -324,7 +326,9 @@ public class ApiGatewayApplication {
                                 "/payment/abb/**",
                                 "/payment/bob/**",
                                 "/payment/redirect/**",
-                                "/payment/heartbeat").uri("http://payment-backend:8080"))
+                                "/payment/heartbeat",
+                                "/.well-known/jwks.json",
+                                "/.well-known/**").uri("http://payment-backend:8080"))
 
                         .route("support-backend", r -> r.path(
                                 "/api/v1/admin/faqs",
