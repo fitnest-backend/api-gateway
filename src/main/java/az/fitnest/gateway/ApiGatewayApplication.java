@@ -283,6 +283,8 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/payments/user/{userId}/history",
                                 "/api/v1/coins/**",
                                 "/api/v1/admin/coins/**",
+                                "/api/v2/coins/**",
+                                "/api/v2/admin/coins/**",
                                 "/api/heartbeat",
                                 "/api/v1/payments/google-pay/create",
                                 "/api/v1/payments/google-pay/submit",
