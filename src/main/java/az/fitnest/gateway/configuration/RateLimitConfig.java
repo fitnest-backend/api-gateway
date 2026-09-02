@@ -33,7 +33,7 @@ public class RateLimitConfig {
     public String getReadCategory(String path) {
         if (path.startsWith("/api/v1/auth/")) {
             return "AUTH_GET";
-        } else if (path.startsWith("/api/v1/me/")) {
+        } else if (path.startsWith("/api/v1/me/") || path.startsWith("/api/v2/me")) {
             return "ME_GET";
         } else if (path.startsWith("/api/v1/media/")) {
             return "MEDIA_GET";

@@ -399,6 +399,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/translations/gender",
                                 "/api/v1/me/summary",
                                 "/api/v1/me",
+                                "/api/v2/me",
                                 "/api/v1/me/location",
                                 "/api/v1/me/body",
                                 "/api/v1/me/profile-image",
