@@ -393,6 +393,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/reports/subscriptions",
                                 "/api/v1/subscription-packages/**",
                                 "/api/v1/me/subscriptions/**",
+                                "/api/v2/me/subscriptions/**",
                                 "/api/v1/subscriptions/upgrade/**",
                                 "/api/v1/orders/**",
                                 "/api/v1/admin/subscriptions/users/{userId}/current",
