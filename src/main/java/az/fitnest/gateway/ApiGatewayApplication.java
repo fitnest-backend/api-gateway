@@ -288,6 +288,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/coins/checkout/preview",
                                 "/api/v1/coins/pay-full",
                                 "/api/v1/coins/balance",
+                                "/api/v1/coins/welcome-bonus/popup-shown",
                                 "/api/v2/coins/balance",
                                 "/api/v2/coins/full-payment-eligibility",
                                 "/api/v1/admin/coins/settings",
