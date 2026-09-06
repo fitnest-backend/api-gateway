@@ -295,6 +295,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/coins/terms",
                                 "/api/v1/admin/coins/adjust",
                                 "/api/v1/admin/coins/bulk-adjust",
+                                "/api/v1/admin/coins/bulk-adjust-all",
                                 "/api/v1/admin/coins/bulk-welcome-bonus",
                                 "/api/v1/admin/coins/history",
                                 "/api/v2/admin/coins/settings",
