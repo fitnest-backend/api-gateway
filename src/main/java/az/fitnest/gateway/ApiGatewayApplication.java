@@ -333,6 +333,7 @@ public class ApiGatewayApplication {
                                 "/payment/result",
                                 "/payment/callback",
                                 "/payment/epoint/callback",
+                                "/epoint/result",
                                 "/payment/payment/init",
                                 "/payment/payment/status/{orderId}",
                                 "/payment/card/save-init",
