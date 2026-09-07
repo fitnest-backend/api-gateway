@@ -24,6 +24,8 @@ public class RateLimitConfig {
 
         limits.put("general.write", 60);
         limits.put("general.read", 300);
+        limits.put("landing.read", 120);
+        limits.put("landing.media.get", 90);
     }
 
     public int getLimit(String key) {
@@ -35,6 +37,10 @@ public class RateLimitConfig {
             return "AUTH_GET";
         } else if (path.startsWith("/api/v1/me/") || path.startsWith("/api/v2/me")) {
             return "ME_GET";
+        } else if (path.startsWith("/api/v1/public/landing/media/")) {
+            return "LANDING_MEDIA_GET";
+        } else if (path.startsWith("/api/v1/public/landing/")) {
+            return "LANDING_GET";
         } else if (path.startsWith("/api/v1/media/")) {
             return "MEDIA_GET";
         } else {
@@ -67,7 +73,14 @@ public class RateLimitConfig {
 
         if (isWrite) {
             return "general.write";
-        } else if (isRead) {
+        }
+        if (path.startsWith("/api/v1/public/landing/media/")) {
+            return "landing.media.get";
+        }
+        if (path.startsWith("/api/v1/public/landing/")) {
+            return "landing.read";
+        }
+        if (isRead) {
             return "general.read";
         }
 

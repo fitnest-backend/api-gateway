@@ -86,6 +86,8 @@ public class ApiGatewayApplication {
                                 "/api/v1/public/app-qr/scan/light",
                                 "/api/v1/public/app-qr/scan/dark",
                                 "/api/v1/public/landing/stats",
+                                "/api/v1/public/landing/home/gyms",
+                                "/api/v1/public/landing/home/stores",
                                 "/api/v1/public/landing/gyms",
                                 "/api/v1/public/landing/gyms/{gymId}",
                                 "/api/v1/public/landing/stores",
