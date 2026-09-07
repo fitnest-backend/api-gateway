@@ -90,6 +90,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/public/landing/gyms/{gymId}",
                                 "/api/v1/public/landing/stores",
                                 "/api/v1/public/landing/stores/{storeId}",
+                                "/api/v1/public/landing/media/{fileId}",
                                 "/api/v1/admin/reports/qr-scans",
                                 "/api/v1/admin/reports/gym-payments",
                                 "/api/v1/admin/stores",
