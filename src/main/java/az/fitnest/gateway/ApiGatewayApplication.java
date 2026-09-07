@@ -107,6 +107,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/gyms",
                                 "/api/v2/gyms",
                                 "/api/v2/gyms/{gymId}",
+                                "/api/v3/gyms/{gymId}",
                                 "/api/v2/admin/gyms/step1",
                                 "/api/v2/admin/gyms/validate/step1",
                                 "/api/v2/admin/gyms/{id}/step5",
