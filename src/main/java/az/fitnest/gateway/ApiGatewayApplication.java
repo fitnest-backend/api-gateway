@@ -397,6 +397,7 @@ public class ApiGatewayApplication {
                                 "/api/v1/admin/support/contact-details",
                                 "/api/v1/support/contactDetails",
                                 "/api/v1/public/landing/contact",
+                                "/api/v1/public/landing/contact-messages",
                                 "/api/v1/public/landing/faqs",
                                 "/api/v1/faqs",
                                 "/api/v1/faq-categories",
