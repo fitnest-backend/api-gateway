@@ -385,7 +385,8 @@ public class ApiGatewayApplication {
                                 "/payment/redirect/success/{id}",
                                 "/payment/redirect/error/{id}",
                                 "/payment/heartbeat",
-                                "/.well-known/jwks.json").uri("http://payment-backend:8080"))
+                                "/.well-known/jwks.json",
+                                "/payment/.well-known/jwks.json").uri("http://payment-backend:8080"))
 
                         .route("support-backend", r -> r.path(
                                 "/api/v1/admin/faqs",

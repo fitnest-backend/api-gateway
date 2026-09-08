@@ -15,7 +15,9 @@ public class PathValidator {
 
     private static final Set<String> AUTH_EXEMPT_PATHS = Set.of(
             "/api/v1/auth/password-recovery/admin/forgot-password",
-            "/api/v1/auth/password-recovery/admin/reset-password"
+            "/api/v1/auth/password-recovery/admin/reset-password",
+            "/.well-known/jwks.json",
+            "/payment/.well-known/jwks.json"
     );
 
     private PathValidator() {
