@@ -412,6 +412,7 @@ public class ApiGatewayApplication {
                         .route("order-backend", r -> r.path(
                                 "/api/v1/admin/reports/subscriptions",
                                 "/api/v1/subscription-packages/**",
+                                "/api/v3/subscription-packages",
                                 "/api/v3/subscription-packages/**",
                                 "/api/v1/me/subscriptions/**",
                                 "/api/v2/me/subscriptions/**",
