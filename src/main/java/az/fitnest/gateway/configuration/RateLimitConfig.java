@@ -26,6 +26,17 @@ public class RateLimitConfig {
         limits.put("general.read", 300);
         limits.put("landing.read", 120);
         limits.put("landing.media.get", 90);
+        limits.put("landing.write", 20);
+        limits.put("landing.contact-messages.post", 8);
+        limits.put("landing.contact-messages.daily", 40);
+        limits.put("bmi.calculate.post", 20);
+    }
+
+    public int getDailyLimit(String rateLimitKey) {
+        if ("landing.contact-messages.post".equals(rateLimitKey)) {
+            return limits.getOrDefault("landing.contact-messages.daily", 40);
+        }
+        return 0;
     }
 
     public int getLimit(String key) {
@@ -69,6 +80,16 @@ public class RateLimitConfig {
 
         if (path.contains("/otp/") && isWrite) {
              return "auth.request-otp.post";
+        }
+
+        if (path.startsWith("/api/v1/public/landing/contact-messages") && isWrite) {
+            return "landing.contact-messages.post";
+        }
+        if (path.startsWith("/api/v1/public/landing/") && isWrite) {
+            return "landing.write";
+        }
+        if (path.startsWith("/api/v1/bmi/") && isWrite) {
+            return "bmi.calculate.post";
         }
 
         if (isWrite) {
